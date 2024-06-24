@@ -13,6 +13,10 @@ class AskAiChatUi extends StatefulWidget {
 class _AskAiChatUiState extends State<AskAiChatUi> {
   late final GenerativeModel _model;
   late final ChatSession _chat;
+  final safetySettings = [
+    SafetySetting(HarmCategory.harassment, HarmBlockThreshold.low),
+    SafetySetting(HarmCategory.hateSpeech, HarmBlockThreshold.low),
+  ];
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
   final FocusNode _textFieldFocus = FocusNode(debugLabel: 'TextField');
@@ -22,7 +26,8 @@ class _AskAiChatUiState extends State<AskAiChatUi> {
   void initState() {
     super.initState();
     _model = GenerativeModel(
-      model: 'gemini-1.5-pro',
+      safetySettings: safetySettings,
+      model: 'gemini-1.5-flash',
       apiKey: 'AIzaSyAWoWzJ-Qh-Gfos2r3cP3_QgzCcf2ewyNs',
     );
     _chat = _model.startChat(history: [

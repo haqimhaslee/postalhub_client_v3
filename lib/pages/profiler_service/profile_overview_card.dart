@@ -4,9 +4,6 @@ import 'package:postalhub_client/pages/profiler_service/your_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-//import 'package:postalhub_client/auth/auth_service.dart';
-//import 'package:provider/provider.dart';
-
 class HomeProfileOverview extends StatefulWidget {
   const HomeProfileOverview({super.key});
   @override
@@ -21,6 +18,7 @@ class _HomeProfileOverviewState extends State<HomeProfileOverview> {
   String? firstname;
   String? lastname;
   String? email;
+  String? profilePic;
   int? membershipPoints;
 
   @override
@@ -35,6 +33,7 @@ class _HomeProfileOverviewState extends State<HomeProfileOverview> {
       DocumentSnapshot userDoc =
           await _firestore.collection('client_user').doc(user.uid).get();
       setState(() {
+        profilePic = userDoc['profile_pic'];
         firstname = userDoc['firstName'];
         lastname = userDoc['lastName'];
         email = userDoc['email'];
@@ -45,12 +44,10 @@ class _HomeProfileOverviewState extends State<HomeProfileOverview> {
 
   @override
   Widget build(BuildContext context) {
-    //final authService = Provider.of<AuthService>(context);
-    //final user = authService.user;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
       child: Card(
-        color: Theme.of(context).colorScheme.tertiaryContainer,
+        color: Theme.of(context).colorScheme.primaryContainer,
         elevation: 0,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -80,25 +77,49 @@ class _HomeProfileOverviewState extends State<HomeProfileOverview> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      const Padding(
-                        padding: EdgeInsets.only(right: 15, left: 15),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15, left: 15),
                         child: SizedBox(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              CircleAvatar(
-                                radius: 35,
-                                backgroundColor:
-                                    Color.fromARGB(255, 255, 255, 255),
-                                // backgroundImage:
-                                //      AssetImage("assets/profile_pic.png"),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: profilePic != null
+                                    ? Image.network(
+                                        profilePic!,
+                                        width: 70.0,
+                                        height: 70.0,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return const Column(
+                                            children: [
+                                              Icon(
+                                                Icons
+                                                    .image_not_supported_outlined,
+                                                size: 70,
+                                              ),
+                                              Text('Failed to load image'),
+                                            ],
+                                          );
+                                        },
+                                      )
+                                    : const Column(
+                                        children: [
+                                          Icon(
+                                            Icons.image,
+                                            size: 50,
+                                          ),
+                                          Text('No Image'),
+                                        ],
+                                      ),
                               ),
                             ],
                           ),
                         ),
                       ),
                       SizedBox(
-                        //width: MediaQuery.of(context).size.width - 180,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -108,9 +129,12 @@ class _HomeProfileOverviewState extends State<HomeProfileOverview> {
                                     child: Padding(
                                         padding: const EdgeInsets.only(
                                             right: 0, left: 0),
-                                        child: Text("Hi, $firstname $lastname!",
-                                            style: const TextStyle(
+                                        child: Text("$firstname $lastname!",
+                                            style: TextStyle(
                                               fontWeight: FontWeight.w600,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimaryContainer,
                                             ))))
                               ],
                             ),
@@ -124,7 +148,7 @@ class _HomeProfileOverviewState extends State<HomeProfileOverview> {
                                     decoration: BoxDecoration(
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .primary,
+                                            .onTertiaryContainer,
                                         border: Border.all(
                                             color: const Color.fromARGB(
                                                 0, 255, 254, 254)),
@@ -138,7 +162,7 @@ class _HomeProfileOverviewState extends State<HomeProfileOverview> {
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .colorScheme
-                                                  .onPrimary),
+                                                  .tertiaryContainer),
                                         )),
                                   ),
                                 ))
@@ -158,9 +182,6 @@ class _HomeProfileOverviewState extends State<HomeProfileOverview> {
                               child: Material(
                                 color: Colors.white,
                                 child: InkWell(
-                                  //splashColor: Theme.of(context)
-                                  //    .colorScheme
-                                  //   .primaryContainer,
                                   onTap: () {
                                     Navigator.push(
                                         context,

@@ -23,9 +23,11 @@ class _SettingsState extends State<Settings> {
     final authService = Provider.of<AuthService>(context);
     // ... other widget code
 
-    return Padding(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child: Center(
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Profile and Settings'),
+        ),
+        body: Center(
           child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: ListView(

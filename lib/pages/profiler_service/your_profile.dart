@@ -22,8 +22,9 @@ class _YourProfileState extends State<YourProfile> {
   String? email;
   String? hostelAddress;
   String? phoneNo;
-String? companyName;
-String? companyEmail;
+  String? companyName;
+  String? companyEmail;
+  String? profilePic;
 
   @override
   void initState() {
@@ -37,13 +38,15 @@ String? companyEmail;
       DocumentSnapshot userDoc =
           await _firestore.collection('client_user').doc(user.uid).get();
       setState(() {
+        profilePic = userDoc['profile_pic'];
+
         firstname = userDoc['firstName'];
         lastname = userDoc['lastName'];
         email = userDoc['email'];
         hostelAddress = userDoc['company_address'];
         phoneNo = userDoc['phone'];
         companyName = userDoc['company_name'];
-         companyEmail = userDoc['company_email'];
+        companyEmail = userDoc['company_email'];
       });
     }
   }
@@ -54,33 +57,89 @@ String? companyEmail;
       appBar: AppBar(
         title: const Text('Your Profile'),
         actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const EditYourProfile()));
+          PopupMenuButton<String>(
+            onSelected: (String result) {
+              switch (result) {
+                case 'EditProfile':
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const EditYourProfile()),
+                  );
+                  break;
+                case 'ResetPassword':
+                  //
+                  break;
+              }
             },
-            tooltip: 'Edit your profile',
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'EditProfile',
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                      child: Icon(Icons.edit),
+                    ),
+                    Text('Edit profile')
+                  ],
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'ResetPassword',
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                      child: Icon(Icons.password_rounded),
+                    ),
+                    Text('Reset password')
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
       body: Padding(
-          padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
           child: ListView(
             children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 20, bottom: 20),
+              Padding(
+                padding: const EdgeInsets.only(top: 20, bottom: 20),
                 child: SizedBox(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      CircleAvatar(
-                        radius: 80,
-                        backgroundColor: Color.fromARGB(255, 255, 255, 255),
-                        // backgroundImage:
-                        //      AssetImage("assets/profile_pic.png"),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: profilePic != null
+                            ? Image.network(
+                                profilePic!,
+                                width: 160.0,
+                                height: 160.0,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Column(
+                                    children: [
+                                      Icon(
+                                        Icons.image_not_supported_outlined,
+                                        size: 160,
+                                      ),
+                                      Text('Failed to load image'),
+                                    ],
+                                  );
+                                },
+                              )
+                            : const Column(
+                                children: [
+                                  Icon(
+                                    Icons.image,
+                                    size: 50,
+                                  ),
+                                  Text('No Image'),
+                                ],
+                              ),
                       ),
                     ],
                   ),
@@ -93,19 +152,18 @@ String? companyEmail;
                     fontWeight: FontWeight.w500, fontSize: 20.0),
               ),
               const SizedBox(height: 10.0),
-             
-             
               const Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                child:Divider(),),
+                padding: EdgeInsets.fromLTRB(20, 15, 20, 10),
+                //child: Divider(),
+              ),
               const Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                child:
-              Text(
-                'Personal Info',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15.0),
-              ),),
+                padding: EdgeInsets.fromLTRB(20, 0, 0, 10),
+                child: Text(
+                  'Personal Info',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15.0),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Card(
@@ -116,11 +174,10 @@ String? companyEmail;
                   child: SizedBox(
                       child: Column(
                     children: [
-                      
                       ClipRRect(
                         borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(0),
-                          topRight: Radius.circular(0),
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15),
                           bottomLeft: Radius.circular(0),
                           bottomRight: Radius.circular(0),
                         ),
@@ -170,8 +227,8 @@ String? companyEmail;
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(0),
                           topRight: Radius.circular(0),
-                          bottomLeft: Radius.circular(0),
-                          bottomRight: Radius.circular(0),
+                          bottomLeft: Radius.circular(15),
+                          bottomRight: Radius.circular(15),
                         ),
                         child: Material(
                           color: Theme.of(context).colorScheme.surfaceVariant,
@@ -215,24 +272,23 @@ String? companyEmail;
                           ),
                         ),
                       ),
-                      
-                      
                     ],
                   )),
                 ),
               ),
               const Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                child:Divider(),),
+                padding: EdgeInsets.fromLTRB(20, 15, 20, 10),
+                //child: Divider(),
+              ),
               const Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                child:
-              Text(
-                'Company Info',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15.0),
-              ),),
-               Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 0, 10),
+                child: Text(
+                  'Company Info',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15.0),
+                ),
+              ),
+              Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Card(
                   elevation: 0,
@@ -250,7 +306,7 @@ String? companyEmail;
                           bottomRight: Radius.circular(0),
                         ),
                         child: Material(
-                          //color: Theme.of(context).colorScheme.surfaceVariant,
+                          color: Theme.of(context).colorScheme.surfaceVariant,
                           child: Padding(
                             padding: const EdgeInsets.only(
                               top: 15,
@@ -291,7 +347,6 @@ String? companyEmail;
                           ),
                         ),
                       ),
-                      
                       ClipRRect(
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(0),
@@ -301,7 +356,7 @@ String? companyEmail;
                         ),
                         child: Material(
                           color: Theme.of(context).colorScheme.surfaceVariant,
-                          child:  Padding(
+                          child: Padding(
                             padding: const EdgeInsets.only(
                               top: 15,
                               bottom: 15,
@@ -320,11 +375,13 @@ String? companyEmail;
                                               child: Padding(
                                                   padding:
                                                       EdgeInsets.only(left: 20),
-                                                  child: Icon(Icons.apartment))),
+                                                  child:
+                                                      Icon(Icons.apartment))),
                                           SizedBox(
                                               child: Padding(
                                                   padding:
-                                                      const EdgeInsets.only(left: 20),
+                                                      const EdgeInsets.only(
+                                                          left: 20),
                                                   child: Text("$hostelAddress",
                                                       style: const TextStyle(
                                                         fontWeight:
@@ -349,7 +406,7 @@ String? companyEmail;
                         ),
                         child: Material(
                           color: Theme.of(context).colorScheme.surfaceVariant,
-                          child:  Padding(
+                          child: Padding(
                             padding: const EdgeInsets.only(
                               top: 15,
                               bottom: 15,
@@ -368,12 +425,12 @@ String? companyEmail;
                                               child: Padding(
                                                   padding:
                                                       EdgeInsets.only(left: 20),
-                                                  child:
-                                                      Icon(Icons.email))),
+                                                  child: Icon(Icons.email))),
                                           SizedBox(
                                               child: Padding(
                                                   padding:
-                                                      const EdgeInsets.only(left: 20),
+                                                      const EdgeInsets.only(
+                                                          left: 20),
                                                   child: Text("$companyEmail",
                                                       style: const TextStyle(
                                                         fontWeight:
@@ -389,11 +446,11 @@ String? companyEmail;
                           ),
                         ),
                       ),
-                     
                     ],
                   )),
                 ),
-              ), const SizedBox(height:20)
+              ),
+              const SizedBox(height: 20)
             ],
           )),
     );

@@ -27,24 +27,24 @@ class _AppNavigatorServicesState extends State<AppNavigatorServices> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
-        appBar: AppBar(
-          //backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
-          //elevation: 1,
-          //scrolledUnderElevation: 0,
-          title: Row(children: [
-            Image.asset(
-              'assets/images/ic_launcher.png',
-              width: 40,
-              height: 40,
-              fit: BoxFit.cover,
-            ),
-            const Text('  Postal Hub'),
-          ]),
-        ),
+        //appBar: AppBar(
+        //backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
+        //elevation: 1,
+        //scrolledUnderElevation: 0,
+        //title: Row(children: [
+        //Image.asset(
+        //  'assets/images/ic_launcher.png',
+        //  width: 40,
+        //  height: 40,
+        //  fit: BoxFit.cover,
+        //),
+        //const Text('  Postal Hub'),
+        //]),
+        //),
         bottomNavigationBar: BottomAppBar(
           //color: Theme.of(context).colorScheme.surfaceContainerLowest,
 
-          height: 70,
+          //height: 75,
           clipBehavior: Clip.antiAlias,
           shape: const CircularNotchedRectangle(),
           child: NavigationBar(

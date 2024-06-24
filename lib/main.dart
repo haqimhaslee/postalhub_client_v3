@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:postalhub_client/src/navigator/navigator_services.dart';
 import 'package:postalhub_client/src/postalhub_ui.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -14,6 +15,14 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    //systemStatusBarContrastEnforced: true,
+    systemNavigationBarColor: Colors.transparent,
+    systemNavigationBarDividerColor: Colors.transparent,
+
+    //statusBarIconBrightness: Brightness.dark
+  ));
 
   runApp(const MyApp());
 }
@@ -33,12 +42,15 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            //colorScheme: lightDynamic ?? lightColorScheme,
-            colorScheme: lightColorScheme,
+            colorScheme: lightDynamic ?? lightColorScheme,
+            //colorScheme: lightColorScheme,
+            pageTransitionsTheme: const PageTransitionsTheme(builders: {
+              TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            }),
           ),
           darkTheme: ThemeData(
-            //colorScheme: darkDynamic ?? darkColorScheme,
-            colorScheme: darkColorScheme,
+            colorScheme: darkDynamic ?? darkColorScheme,
+            //colorScheme: darkColorScheme,
             //colorScheme: lightColorScheme,
           ),
           home: const AuthWrapper(),
