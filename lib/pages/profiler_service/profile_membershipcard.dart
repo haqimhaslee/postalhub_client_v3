@@ -232,22 +232,25 @@ class _MembershipCardState extends State<MembershipCard> {
                 },
               ),
             ),
-            SizedBox(
-              height: 55,
-              child: IconButton(
-                icon: Image.asset('assets/images/add_to_apple_wallet.png'),
-                iconSize: 10,
-                onPressed: () {
-                  const snackBar = SnackBar(
-                    content: Text('Coming soon!'),
-                  );
-
+            const SizedBox(
+              height:30
+            )
+            //SizedBox(
+            //  height: 55,
+            //  child: IconButton(
+            //    icon: Image.asset('assets/images/add_to_apple_wallet.png'),
+           //     iconSize: 10,
+           //     onPressed: () {
+            //      const snackBar = SnackBar(
+           //         content: Text('Coming soon!'),
+           //       );
+//
                   // Find the ScaffoldMessenger in the widget tree
                   // and use it to show a SnackBar.
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                },
-              ),
-            )
+     //             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              //  },
+             // ),
+           // )
           ]),
         ])));
   }

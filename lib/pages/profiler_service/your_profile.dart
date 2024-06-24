@@ -22,6 +22,8 @@ class _YourProfileState extends State<YourProfile> {
   String? email;
   String? hostelAddress;
   String? phoneNo;
+String? companyName;
+String? companyEmail;
 
   @override
   void initState() {
@@ -38,8 +40,10 @@ class _YourProfileState extends State<YourProfile> {
         firstname = userDoc['firstName'];
         lastname = userDoc['lastName'];
         email = userDoc['email'];
-        hostelAddress = userDoc['address'];
+        hostelAddress = userDoc['company_address'];
         phoneNo = userDoc['phone'];
+        companyName = userDoc['company_name'];
+         companyEmail = userDoc['company_email'];
       });
     }
   }
@@ -89,14 +93,21 @@ class _YourProfileState extends State<YourProfile> {
                     fontWeight: FontWeight.w500, fontSize: 20.0),
               ),
               const SizedBox(height: 10.0),
-              const Text(
-                '<nickname>',
-                textAlign: TextAlign.center,
+             
+             
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                child:Divider(),),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                child:
+              Text(
+                'Personal Info',
+                textAlign: TextAlign.left,
                 style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15.0),
-              ),
-              const SizedBox(height: 15.0),
+              ),),
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Card(
                   elevation: 0,
                   shape: const RoundedRectangleBorder(
@@ -105,55 +116,7 @@ class _YourProfileState extends State<YourProfile> {
                   child: SizedBox(
                       child: Column(
                     children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          topRight: Radius.circular(15),
-                          bottomLeft: Radius.circular(0),
-                          bottomRight: Radius.circular(0),
-                        ),
-                        child: Material(
-                          color: Theme.of(context).colorScheme.surfaceVariant,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              top: 15,
-                              bottom: 15,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                SizedBox(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const SizedBox(
-                                              child: Padding(
-                                                  padding:
-                                                      EdgeInsets.only(left: 20),
-                                                  child: Icon(Icons.villa))),
-                                          SizedBox(
-                                              child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 20),
-                                                  child: Text("$hostelAddress",
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ))))
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                      
                       ClipRRect(
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(0),
@@ -231,7 +194,7 @@ class _YourProfileState extends State<YourProfile> {
                                               child: Padding(
                                                   padding:
                                                       EdgeInsets.only(left: 20),
-                                                  child: Icon(Icons.badge))),
+                                                  child: Icon(Icons.email))),
                                           SizedBox(
                                               child: Padding(
                                                   padding:
@@ -252,17 +215,44 @@ class _YourProfileState extends State<YourProfile> {
                           ),
                         ),
                       ),
+                      
+                      
+                    ],
+                  )),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                child:Divider(),),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                child:
+              Text(
+                'Company Info',
+                textAlign: TextAlign.left,
+                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15.0),
+              ),),
+               Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                child: Card(
+                  elevation: 0,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                  ),
+                  child: SizedBox(
+                      child: Column(
+                    children: [
                       ClipRRect(
                         borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(0),
-                          topRight: Radius.circular(0),
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15),
                           bottomLeft: Radius.circular(0),
                           bottomRight: Radius.circular(0),
                         ),
                         child: Material(
-                          color: Theme.of(context).colorScheme.surfaceVariant,
-                          child: const Padding(
-                            padding: EdgeInsets.only(
+                          //color: Theme.of(context).colorScheme.surfaceVariant,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
                               top: 15,
                               bottom: 15,
                             ),
@@ -276,17 +266,67 @@ class _YourProfileState extends State<YourProfile> {
                                     children: [
                                       Row(
                                         children: [
-                                          SizedBox(
+                                          const SizedBox(
                                               child: Padding(
                                                   padding:
                                                       EdgeInsets.only(left: 20),
-                                                  child: Icon(Icons.mail))),
+                                                  child: Icon(Icons.work))),
                                           SizedBox(
                                               child: Padding(
                                                   padding:
+                                                      const EdgeInsets.only(
+                                                          left: 20),
+                                                  child: Text("$companyName",
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ))))
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(0),
+                          topRight: Radius.circular(0),
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(0),
+                        ),
+                        child: Material(
+                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          child:  Padding(
+                            padding: const EdgeInsets.only(
+                              top: 15,
+                              bottom: 15,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const SizedBox(
+                                              child: Padding(
+                                                  padding:
                                                       EdgeInsets.only(left: 20),
-                                                  child: Text("<email>>",
-                                                      style: TextStyle(
+                                                  child: Icon(Icons.apartment))),
+                                          SizedBox(
+                                              child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(left: 20),
+                                                  child: Text("$hostelAddress",
+                                                      style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.w600,
                                                       ))))
@@ -309,8 +349,8 @@ class _YourProfileState extends State<YourProfile> {
                         ),
                         child: Material(
                           color: Theme.of(context).colorScheme.surfaceVariant,
-                          child: const Padding(
-                            padding: EdgeInsets.only(
+                          child:  Padding(
+                            padding: const EdgeInsets.only(
                               top: 15,
                               bottom: 15,
                             ),
@@ -324,18 +364,18 @@ class _YourProfileState extends State<YourProfile> {
                                     children: [
                                       Row(
                                         children: [
-                                          SizedBox(
+                                          const SizedBox(
                                               child: Padding(
                                                   padding:
                                                       EdgeInsets.only(left: 20),
                                                   child:
-                                                      Icon(Icons.mail_lock))),
+                                                      Icon(Icons.email))),
                                           SizedBox(
                                               child: Padding(
                                                   padding:
-                                                      EdgeInsets.only(left: 20),
-                                                  child: Text("<work_email>>",
-                                                      style: TextStyle(
+                                                      const EdgeInsets.only(left: 20),
+                                                  child: Text("$companyEmail",
+                                                      style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.w600,
                                                       ))))
@@ -349,10 +389,11 @@ class _YourProfileState extends State<YourProfile> {
                           ),
                         ),
                       ),
+                     
                     ],
                   )),
                 ),
-              ),
+              ), const SizedBox(height:20)
             ],
           )),
     );

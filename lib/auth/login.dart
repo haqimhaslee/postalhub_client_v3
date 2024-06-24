@@ -55,13 +55,16 @@ class _LoginScreenState extends State<LoginScreen> {
     final authService = Provider.of<AuthService>(context);
 
     return Scaffold(
-        body: Center(
+        body:ListView(children:[Center(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(
+              height: 50,
+            ),
             TextField(
               controller: _emailController,
               decoration: InputDecoration(
@@ -310,6 +313,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
       ),
-    ));
+    )]) );
   }
 }
