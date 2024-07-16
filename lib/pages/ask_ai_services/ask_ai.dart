@@ -12,7 +12,7 @@ class AskAiChatUi extends StatefulWidget {
 
 class _AskAiChatUiState extends State<AskAiChatUi> {
   late final GenerativeModel _model;
-  late final ChatSession _chat;
+  ChatSession? _chat;
   final safetySettings = [
     SafetySetting(HarmCategory.harassment, HarmBlockThreshold.none),
     SafetySetting(HarmCategory.hateSpeech, HarmBlockThreshold.none),
@@ -69,12 +69,25 @@ class _AskAiChatUiState extends State<AskAiChatUi> {
 
   Future<String?> _fetchApiKeyFromFirestore() async {
     try {
-      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-          .instance
-          .collection('api')
-          .doc('gemini_api')
-          .get();
-      return snapshot.data()?['key'];
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance.collection('api').get();
+
+      if (querySnapshot.docs.isEmpty) {
+        _showError('No documents found in the api collection.');
+        return null;
+      }
+
+      // Assuming you want to get the first document's 'gemini_api' field
+      for (var doc in querySnapshot.docs) {
+        final data = doc.data();
+        final apiKey = data['gemini_api'];
+        if (apiKey != null) {
+          return apiKey;
+        }
+      }
+
+      _showError('API key not found in any document.');
+      return null;
     } catch (e) {
       _showError('Error fetching API key: $e');
       return null;
@@ -101,7 +114,7 @@ class _AskAiChatUiState extends State<AskAiChatUi> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _chat.history.length <= preSetChatHistory
+          _chat == null || _chat!.history.length <= preSetChatHistory
               ? const Expanded(
                   child: Center(
                       child: Padding(
@@ -125,7 +138,7 @@ class _AskAiChatUiState extends State<AskAiChatUi> {
                   child: ListView.builder(
                     controller: _scrollController,
                     itemBuilder: (context, idx) {
-                      var content = _chat.history.toList()[
+                      var content = _chat!.history.toList()[
                           idx + preSetChatHistory]; // Start from index 1
                       var text = content.parts
                           .whereType<TextPart>()
@@ -136,7 +149,7 @@ class _AskAiChatUiState extends State<AskAiChatUi> {
                         isFromUser: content.role == 'user',
                       );
                     },
-                    itemCount: _chat.history.length -
+                    itemCount: _chat!.history.length -
                         preSetChatHistory, // Adjust itemCount accordingly
                   ),
                 ),
@@ -200,12 +213,17 @@ class _AskAiChatUiState extends State<AskAiChatUi> {
   }
 
   Future<void> _sendChatMessage(String message) async {
+    if (_chat == null) {
+      _showError('Chat session not initialized.');
+      return;
+    }
+
     setState(() {
       _loading = true;
     });
 
     try {
-      var response = await _chat.sendMessage(
+      var response = await _chat!.sendMessage(
         Content.text(message),
       );
       var text = response.text;

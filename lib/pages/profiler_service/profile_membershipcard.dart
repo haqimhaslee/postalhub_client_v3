@@ -17,7 +17,7 @@ class _MembershipCardState extends State<MembershipCard> {
 
   String? firstname;
   String? lastname;
-  String? email;
+  String? companyId;
   int? membershipPoints;
 
   @override
@@ -34,7 +34,7 @@ class _MembershipCardState extends State<MembershipCard> {
       setState(() {
         firstname = userDoc['firstName'];
         lastname = userDoc['lastName'];
-        email = userDoc['email'];
+        companyId = userDoc['company_id'];
         membershipPoints = userDoc['membership_points'];
       });
     }
@@ -161,7 +161,7 @@ class _MembershipCardState extends State<MembershipCard> {
                                     bottom: 5,
                                   ),
                                   child: QrImageView(
-                                    data: '$email',
+                                    data: '$companyId',
                                     version: QrVersions.auto,
                                     size: 150,
                                     gapless: true,
@@ -232,25 +232,23 @@ class _MembershipCardState extends State<MembershipCard> {
                 },
               ),
             ),
-            const SizedBox(
-              height:30
-            )
+            const SizedBox(height: 30)
             //SizedBox(
             //  height: 55,
             //  child: IconButton(
             //    icon: Image.asset('assets/images/add_to_apple_wallet.png'),
-           //     iconSize: 10,
-           //     onPressed: () {
+            //     iconSize: 10,
+            //     onPressed: () {
             //      const snackBar = SnackBar(
-           //         content: Text('Coming soon!'),
-           //       );
+            //         content: Text('Coming soon!'),
+            //       );
 //
-                  // Find the ScaffoldMessenger in the widget tree
-                  // and use it to show a SnackBar.
-     //             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              //  },
-             // ),
-           // )
+            // Find the ScaffoldMessenger in the widget tree
+            // and use it to show a SnackBar.
+            //             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            //  },
+            // ),
+            // )
           ]),
         ])));
   }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:postalhub_client/auth/login.dart';
 import 'package:provider/provider.dart';
 import 'auth_service.dart';
 
@@ -16,6 +17,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordController2 = TextEditingController();
+  final TextEditingController _companyId = TextEditingController();
   final TextEditingController _companyEmailController = TextEditingController();
   final TextEditingController _companyAddressController =
       TextEditingController();
@@ -67,7 +69,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       });
     } catch (e) {
       // Handle errors if necessary
-      print('Error fetching company list: $e');
     }
   }
 
@@ -76,21 +77,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final authService = Provider.of<AuthService>(context);
 
     return Scaffold(
-      //appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('Register'),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(height: 60),
+                const SizedBox(height: 10),
                 TextField(
                   controller: _firstNameController,
                   decoration: InputDecoration(
                     isDense: true,
                     prefixIcon: const Icon(Icons.person),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     hintText: 'First Name',
                   ),
@@ -102,7 +105,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     isDense: true,
                     prefixIcon: const Icon(Icons.person),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     hintText: 'Last Name',
                   ),
@@ -114,7 +117,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     isDense: true,
                     prefixIcon: const Icon(Icons.phone),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     hintText: 'Phone Number',
                   ),
@@ -123,7 +126,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 10),
                 const Divider(),
                 const SizedBox(height: 10),
-                const Text('Company Personal Details'),
+                const Text('Company Details'),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   value: _selectedCompany,
@@ -137,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     isDense: true,
                     prefixIcon: const Icon(Icons.work),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     hintText: 'Company',
                   ),
@@ -154,9 +157,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     isDense: true,
                     prefixIcon: const Icon(Icons.alternate_email_rounded),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     hintText: 'Company Email',
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _companyId,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    prefixIcon: const Icon(Icons.alternate_email_rounded),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    hintText: 'Staff/Student ID',
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -166,7 +181,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     isDense: true,
                     prefixIcon: const Icon(Icons.holiday_village),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     hintText: 'Company Table/Room Address',
                   ),
@@ -182,7 +197,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     isDense: true,
                     prefixIcon: const Icon(Icons.email),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     hintText: 'Personal email',
                   ),
@@ -205,7 +220,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     hintText: 'Password',
                   ),
@@ -229,7 +244,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     hintText: 'Re-enter Password',
                   ),
@@ -241,17 +256,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     color: Theme.of(context).colorScheme.primaryContainer,
                     elevation: 0,
                     shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     child: SizedBox(
                       child: Column(
                         children: [
                           ClipRRect(
                             borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                              bottomLeft: Radius.circular(15),
-                              bottomRight: Radius.circular(15),
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
                             ),
                             child: Material(
                               color: const Color.fromARGB(0, 255, 193, 7),
@@ -264,6 +279,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   String companyAddress =
                                       _companyAddressController.text;
                                   String phone = _phoneController.text;
+                                  String companyId = _companyId.text;
                                   String companyName = _selectedCompany ?? '';
                                   String companyEmail =
                                       _companyEmailController.text;
@@ -275,8 +291,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     'company_address': companyAddress,
                                     'phone': phone,
                                     'company_name': companyName,
+                                    'company_id': companyId,
                                     'company_email': companyEmail,
                                     'membership_points': 5,
+                                    'company_code': 'UTP',
+                                    'profile_pic':
+                                        'https://firebasestorage.googleapis.com/v0/b/postalhub.appspot.com/o/user_client_profile%2FFxVu4GjMMSX6oRwuLiqWAbiqNhx2?alt=media&token=87558fcd-42b0-4ea7-9886-dbbbd479d67b',
                                   };
 
                                   await authService
@@ -285,8 +305,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 },
                                 child: const Padding(
                                   padding: EdgeInsets.only(
-                                    top: 15,
-                                    bottom: 15,
+                                    top: 10,
+                                    bottom: 10,
                                   ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -334,23 +354,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     //color: Theme.of(context).colorScheme.surfaceVariant,
                     elevation: 0,
                     shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     child: SizedBox(
                       child: Column(
                         children: [
                           ClipRRect(
                             borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                              bottomLeft: Radius.circular(15),
-                              bottomRight: Radius.circular(15),
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
                             ),
                             child: Material(
                               color: const Color.fromARGB(0, 255, 193, 7),
                               child: InkWell(
                                 onTap: () {
-                                  Navigator.pop(context);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginScreen()),
+                                  );
                                 },
                                 child: const Padding(
                                   padding: EdgeInsets.only(

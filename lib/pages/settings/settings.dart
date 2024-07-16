@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:postalhub_client/auth/login.dart';
 import 'package:postalhub_client/pages/profiler_service/profile_overview_card.dart';
 import 'package:postalhub_client/pages/settings/settings_src/about_us.dart';
 import 'package:postalhub_client/pages/settings/settings_src/app_info.dart';
@@ -18,6 +19,30 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  Future<void> logout() async {
+    setState(() {});
+
+    try {
+      // Check if email exists in Firestore collection
+
+      await AuthService.logout();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Logged out')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    } finally {
+      setState(() {});
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
@@ -40,19 +65,19 @@ class _SettingsState extends State<Settings> {
                     height: 10,
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: Card(
                       elevation: 0,
                       shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       child: SizedBox(
                           child: Column(
                         children: [
                           ClipRRect(
                             borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
                               bottomLeft: Radius.circular(0),
                               bottomRight: Radius.circular(0),
                             ),
@@ -329,8 +354,8 @@ class _SettingsState extends State<Settings> {
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(0),
                               topRight: Radius.circular(0),
-                              bottomLeft: Radius.circular(15),
-                              bottomRight: Radius.circular(15),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
                             ),
                             child: Material(
                               color:
@@ -390,19 +415,19 @@ class _SettingsState extends State<Settings> {
                     height: 20,
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: Card(
                       elevation: 0,
                       shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       child: SizedBox(
                           child: Column(
                         children: [
                           ClipRRect(
                             borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
                               bottomLeft: Radius.circular(0),
                               bottomRight: Radius.circular(0),
                             ),
@@ -455,8 +480,8 @@ class _SettingsState extends State<Settings> {
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(0),
                               topRight: Radius.circular(0),
-                              bottomLeft: Radius.circular(15),
-                              bottomRight: Radius.circular(15),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
                             ),
                             child: Material(
                               color:
@@ -516,22 +541,22 @@ class _SettingsState extends State<Settings> {
                     height: 20,
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: Card(
                       color: Theme.of(context).colorScheme.errorContainer,
                       elevation: 0,
                       shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       child: SizedBox(
                           child: Column(
                         children: [
                           ClipRRect(
                             borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                              bottomLeft: Radius.circular(15),
-                              bottomRight: Radius.circular(15),
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
                             ),
                             child: Material(
                               color: const Color.fromARGB(0, 255, 193, 7),

@@ -45,20 +45,20 @@ class _HomeProfileOverviewState extends State<HomeProfileOverview> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       child: Card(
         color: Theme.of(context).colorScheme.primaryContainer,
         elevation: 0,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
         child: SizedBox(
           child: ClipRRect(
             borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(15),
-              topRight: Radius.circular(15),
-              bottomLeft: Radius.circular(15),
-              bottomRight: Radius.circular(15),
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10),
             ),
             child: Material(
               color: const Color.fromARGB(0, 255, 193, 7),
@@ -84,12 +84,12 @@ class _HomeProfileOverviewState extends State<HomeProfileOverview> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
+                                borderRadius: BorderRadius.circular(50.0),
                                 child: profilePic != null
                                     ? Image.network(
                                         profilePic!,
-                                        width: 70.0,
-                                        height: 70.0,
+                                        width: 90.0,
+                                        height: 90.0,
                                         fit: BoxFit.cover,
                                         errorBuilder:
                                             (context, error, stackTrace) {
@@ -129,9 +129,10 @@ class _HomeProfileOverviewState extends State<HomeProfileOverview> {
                                     child: Padding(
                                         padding: const EdgeInsets.only(
                                             right: 0, left: 0),
-                                        child: Text("$firstname $lastname!",
+                                        child: Text("$firstname $lastname",
                                             style: TextStyle(
                                               fontWeight: FontWeight.w600,
+                                              fontSize: 16,
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .onPrimaryContainer,

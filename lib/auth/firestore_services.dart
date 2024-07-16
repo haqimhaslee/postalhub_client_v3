@@ -7,8 +7,7 @@ class FirestoreService {
   Future<void> createUserData(User? user, Map<String, dynamic> userData) async {
     try {
       await _db.collection('client_user').doc(user?.uid).set(userData);
-    } catch (e) {
-      print(e.toString());
-    }
+      // ignore: empty_catches
+    } catch (e) {}
   }
 }

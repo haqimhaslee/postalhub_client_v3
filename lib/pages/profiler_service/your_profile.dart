@@ -24,6 +24,7 @@ class _YourProfileState extends State<YourProfile> {
   String? phoneNo;
   String? companyName;
   String? companyEmail;
+  String? companyId;
   String? profilePic;
 
   @override
@@ -39,7 +40,6 @@ class _YourProfileState extends State<YourProfile> {
           await _firestore.collection('client_user').doc(user.uid).get();
       setState(() {
         profilePic = userDoc['profile_pic'];
-
         firstname = userDoc['firstName'];
         lastname = userDoc['lastName'];
         email = userDoc['email'];
@@ -47,6 +47,7 @@ class _YourProfileState extends State<YourProfile> {
         phoneNo = userDoc['phone'];
         companyName = userDoc['company_name'];
         companyEmail = userDoc['company_email'];
+        companyId = userDoc['company_id'];
       });
     }
   }
@@ -112,7 +113,7 @@ class _YourProfileState extends State<YourProfile> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius: BorderRadius.circular(200.0),
                         child: profilePic != null
                             ? Image.network(
                                 profilePic!,
@@ -383,6 +384,56 @@ class _YourProfileState extends State<YourProfile> {
                                                       const EdgeInsets.only(
                                                           left: 20),
                                                   child: Text("$hostelAddress",
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ))))
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(0),
+                          topRight: Radius.circular(0),
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(0),
+                        ),
+                        child: Material(
+                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              top: 15,
+                              bottom: 15,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const SizedBox(
+                                              child: Padding(
+                                                  padding:
+                                                      EdgeInsets.only(left: 20),
+                                                  child: Icon(
+                                                      Icons.badge_rounded))),
+                                          SizedBox(
+                                              child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 20),
+                                                  child: Text("$companyId",
                                                       style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.w600,

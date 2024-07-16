@@ -1,8 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:postalhub_client/auth/register.dart';
+import 'package:postalhub_client/src/navigator/navigator_services.dart';
 import 'auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool isLoading = false;
 
   final textFieldFocusNode = FocusNode();
   bool _obscured = true;
@@ -27,6 +28,36 @@ class _LoginScreenState extends State<LoginScreen> {
       textFieldFocusNode.canRequestFocus =
           false; // Prevents focus if tap on eye
     });
+  }
+
+  Future<void> login() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      await AuthService.login(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login Successful')),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const AppNavigatorServices()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> _resetPassword() async {
@@ -51,9 +82,22 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context);
+  void initState() {
+    super.initState();
+    // Check if the user is already signed in
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user != null) {
+        // If the user is signed in, navigate to the main screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AppNavigatorServices()),
+        );
+      }
+    });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
       child: Padding(
@@ -111,60 +155,56 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: SizedBox(
                     child: Column(
                   children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
-                        bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15),
-                      ),
-                      child: Material(
-                        color: const Color.fromARGB(0, 255, 193, 7),
-                        child: InkWell(
-                          onTap: () async {
-                            String email = _emailController.text;
-                            String password = _passwordController.text;
-                            User? user = await authService
-                                .signInWithEmailAndPassword(email, password);
-                            if (user != null) {
-                              Navigator.pushReplacementNamed(context, '/home');
-                            }
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.only(
-                              top: 15,
-                              bottom: 15,
+                    isLoading
+                        ? const CircularProgressIndicator()
+                        : ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                              bottomLeft: Radius.circular(15),
+                              bottomRight: Radius.circular(15),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                SizedBox(
-                                  //width: MediaQuery.of(context).size.width - 180,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                              child: Padding(
-                                                  padding: EdgeInsets.only(),
-                                                  child: Text("Login",
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ))))
-                                        ],
+                            child: Material(
+                              color: const Color.fromARGB(0, 255, 193, 7),
+                              child: InkWell(
+                                onTap: login,
+                                child: const Padding(
+                                  padding: EdgeInsets.only(
+                                    top: 15,
+                                    bottom: 15,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        //width: MediaQuery.of(context).size.width - 180,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                SizedBox(
+                                                    child: Padding(
+                                                        padding:
+                                                            EdgeInsets.only(),
+                                                        child: Text("Login",
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ))))
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
                   ],
                 )),
               ),
@@ -266,7 +306,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: const Color.fromARGB(0, 255, 193, 7),
                         child: InkWell(
                           onTap: () {
-                            Navigator.pushNamed(context, '/register');
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const RegisterScreen()),
+                            );
                           },
                           child: const Padding(
                             padding: EdgeInsets.only(

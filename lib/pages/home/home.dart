@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:postalhub_client/pages/home/home_services/carousel.dart';
-import 'package:postalhub_client/pages/home/home_services/newsletter_brief.dart';
-import 'package:postalhub_client/pages/home/home_services/queue_ms.dart';
+//import 'package:postalhub_client/pages/home/home_services/newsletter_brief.dart';
+import 'package:postalhub_client/pages/home/home_services/homescreen_widgets.dart';
 import 'package:postalhub_client/pages/profiler_service/profile_overview_card.dart';
 
 class Home extends StatefulWidget {
@@ -16,6 +16,7 @@ class _HomeState extends State<Home> {
     // ... other widget code
 
     return Scaffold(
+        //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         appBar: AppBar(
           //toolbarHeight: 80,
           //elevation: 3,
@@ -49,24 +50,16 @@ class _HomeState extends State<Home> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Carousel(),
                     HomeProfileOverview(),
                     SizedBox(
-                      height: 5,
+                      height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Text('Ready to pickup?')],
+                    Carousel(),
+                    //HomeProfileOverview(),
+                    SizedBox(
+                      height: 10,
                     ),
                     QueueMs(),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Text('Notification/Newsletter')],
-                    ),
-                    NewsletterBrief(),
                     SizedBox(
                       height: 10,
                     ),

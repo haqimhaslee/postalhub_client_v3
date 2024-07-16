@@ -10,16 +10,22 @@ class AuthService {
   get user => null;
 
   // Sign in with email and password
-  Future<User?> signInWithEmailAndPassword(
-      String email, String password) async {
+  static Future<void> login(
+      {required String email, required String password}) async {
     try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      User? user = result.user;
-      return user;
-    } catch (e) {
-      print(e.toString());
-      return null;
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          throw 'No user found for that email.';
+        case 'wrong-password':
+          throw 'Wrong password provided.';
+        default:
+          throw 'Login failed. Please try again.';
+      }
     }
   }
 
@@ -33,9 +39,13 @@ class AuthService {
       await _firestoreService.createUserData(user, userData);
       return user;
     } catch (e) {
-      print(e.toString());
       return null;
     }
+  }
+
+  // Sign out V2
+  static Future<void> logout() async {
+    await FirebaseAuth.instance.signOut();
   }
 
   // Sign out
@@ -43,7 +53,6 @@ class AuthService {
     try {
       return await _auth.signOut();
     } catch (e) {
-      print(e.toString());
       return null;
     }
   }
