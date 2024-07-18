@@ -16,7 +16,6 @@ class _HomeState extends State<Home> {
     // ... other widget code
 
     return Scaffold(
-        //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         appBar: AppBar(
           //toolbarHeight: 80,
           //elevation: 3,
@@ -50,12 +49,12 @@ class _HomeState extends State<Home> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    HomeProfileOverview(),
-                    SizedBox(
-                      height: 10,
-                    ),
                     Carousel(),
                     //HomeProfileOverview(),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    HomeProfileOverview(),
                     SizedBox(
                       height: 10,
                     ),

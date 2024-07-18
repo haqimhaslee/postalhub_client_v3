@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:postalhub_client/auth/login.dart';
 import 'package:postalhub_client/pages/profiler_service/profile_overview_card.dart';
-import 'package:postalhub_client/pages/settings/settings_src/about_us.dart';
 import 'package:postalhub_client/pages/settings/settings_src/app_info.dart';
 import 'package:postalhub_client/pages/settings/settings_src/faq.dart';
 import 'package:postalhub_client/pages/settings/settings_src/privacy_policy.dart';
@@ -21,12 +20,8 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   Future<void> logout() async {
     setState(() {});
-
     try {
-      // Check if email exists in Firestore collection
-
       await AuthService.logout();
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Logged out')),
       );
@@ -35,7 +30,7 @@ class _SettingsState extends State<Settings> {
         SnackBar(content: Text(e.toString())),
       );
     } finally {
-      setState(() {});
+      //setState(() {});
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -78,62 +73,6 @@ class _SettingsState extends State<Settings> {
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(0),
-                              bottomRight: Radius.circular(0),
-                            ),
-                            child: Material(
-                              color:
-                                  Theme.of(context).colorScheme.surfaceVariant,
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const AboutUs()));
-                                },
-                                child: const Padding(
-                                  padding: EdgeInsets.only(
-                                    top: 15,
-                                    bottom: 15,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        //width: MediaQuery.of(context).size.width - 180,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                SizedBox(
-                                                    child: Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left: 20),
-                                                        child: Text("About Us",
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                            ))))
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(0),
-                              topRight: Radius.circular(0),
                               bottomLeft: Radius.circular(0),
                               bottomRight: Radius.circular(0),
                             ),

@@ -14,12 +14,11 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // Set the system navigation bar color to transparent
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    //systemStatusBarContrastEnforced: true,
-    systemNavigationBarColor: Colors.transparent,
-    systemNavigationBarDividerColor: Colors.transparent,
-
-    //statusBarIconBrightness: Brightness.dark
+    systemNavigationBarColor: Colors.transparent, // navigation bar color
+    systemNavigationBarIconBrightness:
+        Brightness.dark, // navigation bar icon color
   ));
 
   runApp(const MyApp());

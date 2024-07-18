@@ -36,13 +36,13 @@ class _CarouselState extends State<Carousel> {
               //height: 177,
               enlargeCenterPage: true,
               autoPlay: true,
-              aspectRatio: 16 / 9,
+              aspectRatio: 16 / 7.9,
               //aspectRatio: 4 / 2,
               autoPlayCurve: Curves.easeInOut,
               enableInfiniteScroll: true,
               autoPlayAnimationDuration: const Duration(milliseconds: 1100),
               autoPlayInterval: const Duration(seconds: 7),
-              viewportFraction: 1,
+              viewportFraction: 0.85,
             ),
             items: items.map((item) {
               final imageUrl = item['image_url'] ?? '';
