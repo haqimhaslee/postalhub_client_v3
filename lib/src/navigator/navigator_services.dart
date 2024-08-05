@@ -100,7 +100,7 @@ class _AppNavigatorServicesState extends State<AppNavigatorServices> {
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Padding(
                               padding: EdgeInsets.only(
@@ -109,7 +109,7 @@ class _AppNavigatorServicesState extends State<AppNavigatorServices> {
                                 //top: 5,
                                 //bottom: 2,
                               ),
-                              child: Text('Ask AI by '),
+                              child: Text("'Ask AI' by  "),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
@@ -120,15 +120,14 @@ class _AppNavigatorServicesState extends State<AppNavigatorServices> {
                               ),
                               child: Shimmer.fromColors(
                                 period: const Duration(milliseconds: 2000),
-                                baseColor:
-                                    Theme.of(context).colorScheme.primary,
+                                baseColor: Color.fromARGB(255, 63, 111, 232),
                                 highlightColor:
-                                    Theme.of(context).colorScheme.tertiary,
+                                    Color.fromARGB(255, 242, 106, 88),
                                 child: const Text(
                                   'Gemini',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    //fontSize: 20.0,
+                                    fontSize: 18.0,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

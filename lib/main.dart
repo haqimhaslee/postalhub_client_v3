@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:postalhub_client/auth/auth_page.dart';
 import 'package:postalhub_client/src/postalhub_ui.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'auth/auth_service.dart';
-import 'auth/login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,12 +39,14 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
+            fontFamily: 'GoogleSans',
             colorScheme: lightDynamic ?? lightColorScheme,
           ),
           darkTheme: ThemeData(
+            fontFamily: 'GoogleSans',
             colorScheme: darkDynamic ?? darkColorScheme,
           ),
-          home: const LoginScreen(),
+          home: const AuthPage(),
         ),
       );
     });

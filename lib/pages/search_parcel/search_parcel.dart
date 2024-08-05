@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:another_stepper/another_stepper.dart';
 
 class SearchParcel extends StatefulWidget {
   const SearchParcel({super.key});
@@ -186,10 +186,107 @@ class _SearchParcelState extends State<SearchParcel> {
                 ? (data['timestamp_delivered'] as Timestamp).toDate()
                 : null;
 
+            List<StepperData> stepperDataDelivered = [
+              StepperData(
+                  title: StepperText(
+                    "Ready to take",
+                    textStyle: const TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  subtitle: StepperText("Arriving/Sorting"),
+                  iconWidget: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child: const Icon(Icons.check_rounded, color: Colors.white),
+                  )),
+              StepperData(
+                  title: StepperText("Delivered",
+                      textStyle: const TextStyle(
+                        color: Colors.grey,
+                      )),
+                  subtitle: StepperText("Delivery"),
+                  iconWidget: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child: const Icon(Icons.check_rounded, color: Colors.white),
+                  )),
+            ];
+
+            List<StepperData> stepperDataSorted = [
+              StepperData(
+                  title: StepperText(
+                    "Ready to take",
+                    textStyle: const TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  subtitle: StepperText("Arriving/Sorting"),
+                  iconWidget: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child: const Icon(Icons.check_rounded, color: Colors.white),
+                  )),
+              StepperData(
+                  title: StepperText(
+                    "Not delivered",
+                    textStyle: const TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  subtitle: StepperText("Delivery"),
+                  iconWidget: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child: const Icon(Icons.close_rounded, color: Colors.white),
+                  )),
+            ];
+
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Column(
+                  children: [
+                    if (status == 'DELIVERED')
+                      AnotherStepper(
+                        stepperList: stepperDataDelivered,
+                        stepperDirection: Axis.horizontal,
+                        iconWidth: 40,
+                        iconHeight: 40,
+                        activeBarColor: Colors.green,
+                        inActiveBarColor: Colors.grey,
+                        inverted: true,
+                        verticalGap: 30,
+                        activeIndex: 1,
+                        barThickness: 8,
+                      ),
+                    if (status == 'ARRIVED-SORTED')
+                      AnotherStepper(
+                        stepperList: stepperDataSorted,
+                        stepperDirection: Axis.horizontal,
+                        iconWidth: 40,
+                        iconHeight: 40,
+                        activeBarColor: Colors.green,
+                        inActiveBarColor: Colors.grey,
+                        inverted: true,
+                        verticalGap: 30,
+                        activeIndex: 0,
+                        barThickness: 8,
+                      ),
+                  ],
+                ),
                 const SizedBox(
                   height: 10,
                 ),

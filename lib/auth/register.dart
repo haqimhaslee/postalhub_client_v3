@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:postalhub_client/auth/login.dart';
+import 'package:postalhub_client/auth/new_login/login.dart';
 import 'package:provider/provider.dart';
 import 'auth_service.dart';
 
@@ -374,7 +374,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const LoginScreen()),
+                                            const LoginScreenNew()),
                                   );
                                 },
                                 child: const Padding(

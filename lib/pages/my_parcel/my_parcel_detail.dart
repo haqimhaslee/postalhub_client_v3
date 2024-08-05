@@ -3,6 +3,7 @@
 import 'package:intl/intl.dart'; // Add this import for date formatting
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:another_stepper/another_stepper.dart';
 
 class MyParcelDetail extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -33,13 +34,110 @@ class MyParcelDetail extends StatelessWidget {
         ? (data['timestamp_delivered'] as Timestamp).toDate()
         : null;
 
+    List<StepperData> stepperDataDelivered = [
+      StepperData(
+          title: StepperText(
+            "Ready to take",
+            textStyle: const TextStyle(
+              color: Colors.grey,
+            ),
+          ),
+          subtitle: StepperText("Arriving/Sorting"),
+          iconWidget: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: const BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            child: const Icon(Icons.check_rounded, color: Colors.white),
+          )),
+      StepperData(
+          title: StepperText("Delivered",
+              textStyle: const TextStyle(
+                color: Colors.grey,
+              )),
+          subtitle: StepperText("Delivery"),
+          iconWidget: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: const BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            child: const Icon(Icons.check_rounded, color: Colors.white),
+          )),
+    ];
+
+    List<StepperData> stepperDataSorted = [
+      StepperData(
+          title: StepperText(
+            "Ready to take",
+            textStyle: const TextStyle(
+              color: Colors.grey,
+            ),
+          ),
+          subtitle: StepperText("Arriving/Sorting"),
+          iconWidget: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: const BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            child: const Icon(Icons.check_rounded, color: Colors.white),
+          )),
+      StepperData(
+          title: StepperText(
+            "Not delivered",
+            textStyle: const TextStyle(
+              color: Colors.grey,
+            ),
+          ),
+          subtitle: StepperText("Delivery"),
+          iconWidget: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: const BoxDecoration(
+                color: Colors.grey,
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            child: const Icon(Icons.close_rounded, color: Colors.white),
+          )),
+    ];
+
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         appBar: AppBar(
-          title: Text('Parcel Details - [$trackingID1]'),
+          title: Text('$trackingID1'),
         ),
         body: ListView(
           children: [
+            const SizedBox(
+              height: 30,
+            ),
+            Column(
+              children: [
+                if (status == 'DELIVERED')
+                  AnotherStepper(
+                    stepperList: stepperDataDelivered,
+                    stepperDirection: Axis.horizontal,
+                    iconWidth: 40,
+                    iconHeight: 40,
+                    activeBarColor: Colors.green,
+                    inActiveBarColor: Colors.grey,
+                    inverted: true,
+                    verticalGap: 20,
+                    activeIndex: 1,
+                    barThickness: 8,
+                  ),
+                if (status == 'ARRIVED-SORTED')
+                  AnotherStepper(
+                    stepperList: stepperDataSorted,
+                    stepperDirection: Axis.horizontal,
+                    iconWidth: 40,
+                    iconHeight: 40,
+                    activeBarColor: Colors.green,
+                    inActiveBarColor: Colors.grey,
+                    inverted: true,
+                    verticalGap: 20,
+                    activeIndex: 0,
+                    barThickness: 8,
+                  ),
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(

@@ -45,7 +45,7 @@ class _HomeProfileOverviewState extends State<HomeProfileOverview> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: Card(
         color: Theme.of(context).colorScheme.primaryContainer,
         elevation: 0,
@@ -132,13 +132,21 @@ class _HomeProfileOverviewState extends State<HomeProfileOverview> {
                                         child: Text("$firstname $lastname",
                                             style: TextStyle(
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 16,
+                                              fontSize: 18,
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .onPrimaryContainer,
                                             ))))
                               ],
                             ),
+                            Text("ID : 834623",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 13,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
+                                )),
                             Row(
                               children: [
                                 SizedBox(

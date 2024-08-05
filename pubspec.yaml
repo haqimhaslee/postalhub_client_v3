@@ -33,6 +33,7 @@ dependencies:
   image_picker: ^1.1.2
   firebase_storage: ^12.1.1
   visibility_detector: ^0.4.0+2
+  another_stepper: ^1.2.2
   
 
 dev_dependencies:
@@ -54,4 +55,14 @@ flutter:
   - assets/images/werehouse_membershipcard.png
   - assets/images/add_to_google_wallet.png
   - assets/images/add_to_apple_wallet.png
+
+  fonts:
+      - family: GoogleSans
+        fonts:
+          - asset: assets/fonts/google_sans_regular.ttf
+          - asset: assets/fonts/google_sans_italic.ttf
+            style: italic
+      - family: Kaleko
+        fonts:
+          - asset: assets/fonts/kaleko_regular.ttf
 
