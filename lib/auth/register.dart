@@ -77,9 +77,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final authService = Provider.of<AuthService>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),

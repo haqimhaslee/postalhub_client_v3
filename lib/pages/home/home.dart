@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:postalhub_client/pages/home/home_services/carousel.dart';
+//import 'package:postalhub_client/pages/home/home_services/carousel.dart';
+//import 'package:postalhub_client/pages/home/home_services/carousel.dart';
+import 'package:postalhub_client/pages/home/home_services/carousel_ads.dart';
 //import 'package:postalhub_client/pages/home/home_services/newsletter_brief.dart';
 import 'package:postalhub_client/pages/home/home_services/homescreen_widgets.dart';
 import 'package:postalhub_client/pages/profiler_service/profile_overview_card.dart';
@@ -49,11 +51,12 @@ class _HomeState extends State<Home> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Carousel(),
+                    CarouselAds(),
+                    //Carousel(),
                     //HomeProfileOverview(),
-                    SizedBox(
-                      height: 5,
-                    ),
+
+                    //Carousel(),
+                    //SizedBox(height: 5),
                     HomeProfileOverview(),
                     SizedBox(
                       height: 10,

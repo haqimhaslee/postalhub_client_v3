@@ -48,7 +48,22 @@ class MyParcelDetail extends StatelessWidget {
             decoration: const BoxDecoration(
                 color: Colors.green,
                 borderRadius: BorderRadius.all(Radius.circular(30))),
-            child: const Icon(Icons.check_rounded, color: Colors.white),
+            child: const Icon(Icons.inventory, color: Colors.white),
+          )),
+      StepperData(
+          title: StepperText(
+            "On delivery",
+            textStyle: const TextStyle(
+              color: Colors.grey,
+            ),
+          ),
+          subtitle: StepperText("On delivery"),
+          iconWidget: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: const BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            child: const Icon(Icons.delivery_dining, color: Colors.white),
           )),
       StepperData(
           title: StepperText("Delivered",
@@ -62,7 +77,7 @@ class MyParcelDetail extends StatelessWidget {
                 color: Colors.green,
                 borderRadius: BorderRadius.all(Radius.circular(30))),
             child: const Icon(Icons.check_rounded, color: Colors.white),
-          )),
+          ))
     ];
 
     List<StepperData> stepperDataSorted = [
@@ -79,29 +94,106 @@ class MyParcelDetail extends StatelessWidget {
             decoration: const BoxDecoration(
                 color: Colors.green,
                 borderRadius: BorderRadius.all(Radius.circular(30))),
-            child: const Icon(Icons.check_rounded, color: Colors.white),
+            child: const Icon(Icons.inventory, color: Colors.white),
           )),
       StepperData(
           title: StepperText(
-            "Not delivered",
+            "On delivery",
             textStyle: const TextStyle(
               color: Colors.grey,
             ),
           ),
+          subtitle: StepperText("On delivery"),
+          iconWidget: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: const BoxDecoration(
+                color: Colors.grey,
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            child: const Icon(Icons.delivery_dining, color: Colors.white),
+          )),
+      StepperData(
+          title: StepperText("Delivered",
+              textStyle: const TextStyle(
+                color: Colors.grey,
+              )),
           subtitle: StepperText("Delivery"),
           iconWidget: Container(
             padding: const EdgeInsets.all(8),
             decoration: const BoxDecoration(
                 color: Colors.grey,
                 borderRadius: BorderRadius.all(Radius.circular(30))),
-            child: const Icon(Icons.close_rounded, color: Colors.white),
+            child: const Icon(Icons.check_rounded, color: Colors.white),
+          ))
+    ];
+
+    List<StepperData> stepperDataOnDelivery = [
+      StepperData(
+          title: StepperText(
+            "Ready to take",
+            textStyle: const TextStyle(
+              color: Colors.grey,
+            ),
+          ),
+          subtitle: StepperText("Arriving/Sorting"),
+          iconWidget: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: const BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            child: const Icon(Icons.inventory, color: Colors.white),
           )),
+      StepperData(
+          title: StepperText(
+            "On delivery",
+            textStyle: const TextStyle(
+              color: Colors.grey,
+            ),
+          ),
+          subtitle: StepperText("On delivery"),
+          iconWidget: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: const BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            child: const Icon(Icons.delivery_dining, color: Colors.white),
+          )),
+      StepperData(
+          title: StepperText("Not delivered",
+              textStyle: const TextStyle(
+                color: Colors.grey,
+              )),
+          subtitle: StepperText("Delivery"),
+          iconWidget: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: const BoxDecoration(
+                color: Colors.grey,
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            child: const Icon(Icons.check_rounded, color: Colors.white),
+          ))
     ];
 
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         appBar: AppBar(
           title: Text('$trackingID1'),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Coming soon!'),
+                action: SnackBarAction(
+                  label: 'OK',
+                  onPressed: () {
+                    // Code to execute.
+                  },
+                ),
+              ),
+            );
+          },
+          label: const Text("Request for delivery"),
+          icon: const Icon(Icons.delivery_dining_rounded),
         ),
         body: ListView(
           children: [
@@ -110,36 +202,49 @@ class MyParcelDetail extends StatelessWidget {
             ),
             Column(
               children: [
-                if (status == 'DELIVERED')
-                  AnotherStepper(
-                    stepperList: stepperDataDelivered,
-                    stepperDirection: Axis.horizontal,
-                    iconWidth: 40,
-                    iconHeight: 40,
-                    activeBarColor: Colors.green,
-                    inActiveBarColor: Colors.grey,
-                    inverted: true,
-                    verticalGap: 20,
-                    activeIndex: 1,
-                    barThickness: 8,
-                  ),
-                if (status == 'ARRIVED-SORTED')
-                  AnotherStepper(
-                    stepperList: stepperDataSorted,
-                    stepperDirection: Axis.horizontal,
-                    iconWidth: 40,
-                    iconHeight: 40,
-                    activeBarColor: Colors.green,
-                    inActiveBarColor: Colors.grey,
-                    inverted: true,
-                    verticalGap: 20,
-                    activeIndex: 0,
-                    barThickness: 8,
-                  ),
+                switch (status) {
+                  1 => AnotherStepper(
+                      stepperList: stepperDataSorted,
+                      stepperDirection: Axis.horizontal,
+                      iconWidth: 40,
+                      iconHeight: 40,
+                      activeBarColor: Colors.green,
+                      inActiveBarColor: Colors.grey,
+                      inverted: true,
+                      verticalGap: 20,
+                      activeIndex: 0,
+                      barThickness: 8,
+                    ),
+                  2 => AnotherStepper(
+                      stepperList: stepperDataOnDelivery,
+                      stepperDirection: Axis.horizontal,
+                      iconWidth: 40,
+                      iconHeight: 40,
+                      activeBarColor: Colors.green,
+                      inActiveBarColor: Colors.grey,
+                      inverted: true,
+                      verticalGap: 20,
+                      activeIndex: 1,
+                      barThickness: 8,
+                    ),
+                  3 => AnotherStepper(
+                      stepperList: stepperDataDelivered,
+                      stepperDirection: Axis.horizontal,
+                      iconWidth: 40,
+                      iconHeight: 40,
+                      activeBarColor: Colors.green,
+                      inActiveBarColor: Colors.grey,
+                      inverted: true,
+                      verticalGap: 20,
+                      activeIndex: 2,
+                      barThickness: 8,
+                    ),
+                  _ => Container(), // Handle default case if needed
+                },
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -160,31 +265,53 @@ class MyParcelDetail extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: Image.network(
-                                    imageUrl,
-                                    width: 300.0,
-                                    height: 300.0,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      String errorMessage;
-                                      if (error is NetworkImageLoadException) {
-                                        errorMessage = 'Network error: $error';
-                                      } else {
-                                        errorMessage =
-                                            'Failed to load image: $error';
-                                      }
-                                      return Column(
-                                        children: [
-                                          const Icon(Icons
-                                              .image_not_supported_outlined),
-                                          Text(errorMessage),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                ),
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      child: Image.network(
+                                        imageUrl,
+                                        width: 300.0,
+                                        //height: 300.0,
+                                        fit: BoxFit.cover,
+                                        loadingBuilder: (BuildContext context,
+                                            Widget child,
+                                            ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            // Image is fully loaded
+                                            return child;
+                                          } else {
+                                            // Image is still loading, show a progress indicator
+                                            return const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            );
+                                          }
+                                        },
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          String errorMessage;
+                                          if (error
+                                              is NetworkImageLoadException) {
+                                            errorMessage =
+                                                'Network error: $error';
+                                          } else {
+                                            errorMessage =
+                                                'Failed to load image: $error';
+                                          }
+                                          return Column(
+                                            children: [
+                                              const Icon(Icons
+                                                  .image_not_supported_outlined),
+                                              Text(errorMessage),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                )
                               ],
                             )),
                         const SizedBox(
@@ -215,6 +342,10 @@ class MyParcelDetail extends StatelessWidget {
                                 Text(
                                   'Owner : $ownerId',
                                 ),
+                              if (timestampArrived != null)
+                                Text(
+                                  'Arrived & sorted at: ${DateFormat.yMMMd().add_jm().format(timestampArrived)}',
+                                ),
                               if (remarks.isNotEmpty)
                                 Text(
                                   'Remarks/Notes : $remarks',
@@ -229,11 +360,8 @@ class MyParcelDetail extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 1, 20, 1),
-                    child: Divider(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(15, 1, 15, 1),
                   ),
                   Card(
                     elevation: 0,
@@ -245,12 +373,12 @@ class MyParcelDetail extends StatelessWidget {
                           height: 10,
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
+                          padding: const EdgeInsets.fromLTRB(25, 0, 25, 10),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if (status == 'DELIVERED')
+                              if (status == 3)
                                 Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(5, 5, 5, 1),
@@ -258,41 +386,6 @@ class MyParcelDetail extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        children: [
-                                          const Text('Status : '),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                                color: const Color.fromARGB(
-                                                    255, 13, 196, 0),
-                                                border: Border.all(),
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                        Radius.circular(10))),
-                                            child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        5, 1, 5, 1),
-                                                child: Text(
-                                                  data['status'],
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .onPrimary),
-                                                )),
-                                          ),
-                                        ],
-                                      ),
-                                      if (timestampArrived != null)
-                                        Text(
-                                          'Arrived & sorted at: ${DateFormat.yMMMd().add_jm().format(timestampArrived)}',
-                                        ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
                                       if (timestampDelivered != null)
                                         Text(
                                           'Delivered at: ${DateFormat.yMMMd().add_jm().format(timestampDelivered)}',
@@ -309,34 +402,54 @@ class MyParcelDetail extends StatelessWidget {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            child: Image.network(
-                                              receiverImageUrl,
-                                              width: 300.0,
-                                              height: 300.0,
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                String errorMessage;
-                                                if (error
-                                                    is NetworkImageLoadException) {
-                                                  errorMessage =
-                                                      'Network error: $error';
-                                                } else {
-                                                  errorMessage =
-                                                      'Failed to load image: $error';
-                                                }
-                                                return Column(
-                                                  children: [
-                                                    const Icon(Icons
-                                                        .image_not_supported_outlined),
-                                                    Text(errorMessage),
-                                                  ],
-                                                );
-                                              },
-                                            ),
+                                          Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                child: Image.network(
+                                                  receiverImageUrl,
+                                                  width: 300.0,
+                                                  //height: 300.0,
+                                                  fit: BoxFit.cover,
+                                                  loadingBuilder:
+                                                      (BuildContext context,
+                                                          Widget child,
+                                                          ImageChunkEvent?
+                                                              loadingProgress) {
+                                                    if (loadingProgress ==
+                                                        null) {
+                                                      return child;
+                                                    } else {
+                                                      return const Center(
+                                                        child:
+                                                            CircularProgressIndicator(),
+                                                      );
+                                                    }
+                                                  },
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    String errorMessage;
+                                                    if (error
+                                                        is NetworkImageLoadException) {
+                                                      errorMessage =
+                                                          'Network error: $error';
+                                                    } else {
+                                                      errorMessage =
+                                                          'Failed to load image: $error';
+                                                    }
+                                                    return Column(
+                                                      children: [
+                                                        const Icon(Icons
+                                                            .image_not_supported_outlined),
+                                                        Text(errorMessage),
+                                                      ],
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -354,31 +467,6 @@ class MyParcelDetail extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        children: [
-                                          const Text('Status : '),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                                color: const Color.fromARGB(
-                                                    255, 167, 196, 0),
-                                                border: Border.all(),
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                        Radius.circular(10))),
-                                            child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        5, 1, 5, 1),
-                                                child: Text(
-                                                  data['status'],
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .onPrimary),
-                                                )),
-                                          ),
-                                        ],
-                                      ),
                                       if (timestampArrived != null)
                                         Text(
                                           'Arrived & sorted at: ${DateFormat.yMMMd().add_jm().format(timestampArrived)}',
@@ -393,7 +481,7 @@ class MyParcelDetail extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 75,
                   ),
                 ],
               ),

@@ -9,26 +9,6 @@ class AuthService {
 
   get user => null;
 
-  // Sign in with email and password
-  static Future<void> login(
-      {required String email, required String password}) async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      switch (e.code) {
-        case 'user-not-found':
-          throw 'No user found for that email.';
-        case 'wrong-password':
-          throw 'Wrong password provided.';
-        default:
-          throw 'Login failed. Please try again.';
-      }
-    }
-  }
-
   // Register with email and password and additional user data
   Future<User?> registerWithEmailAndPassword(
       String email, String password, Map<String, dynamic> userData) async {
@@ -41,11 +21,6 @@ class AuthService {
     } catch (e) {
       return null;
     }
-  }
-
-  // Sign out V2
-  static Future<void> logout() async {
-    await FirebaseAuth.instance.signOut();
   }
 
   // Sign out

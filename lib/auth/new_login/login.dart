@@ -1,10 +1,8 @@
-// ignore_for_file: use_build_context_synchronously, deprecated_member_use
+// ignore_for_file: use_build_context_synchronously, duplicate_ignore, deprecated_member_use
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:postalhub_client/auth/new_login/wave.dart';
-import 'package:postalhub_client/auth/register.dart';
-import 'package:postalhub_client/auth/auth_service.dart';
+import 'package:postalhub_client/auth/new_register/register.dart';
 import 'package:postalhub_client/src/navigator/navigator_services.dart';
 
 class LoginScreenNew extends StatefulWidget {
@@ -32,60 +30,29 @@ class _LoginScreenNewState extends State<LoginScreenNew> {
     });
   }
 
-  void signUserIn() async {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return Dialog(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    //height: 15,
-                    child: LoadingAnimationWidget.flickr(
-                      leftDotColor: Theme.of(context).colorScheme.primary,
-                      rightDotColor: Theme.of(context).colorScheme.tertiary,
-                      size: 40,
-                    ),
-                  ),
-                  const Text('Signing in'),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text, password: _passwordController.text);
-      Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        emailErrorState();
-      } else if (e.code == 'wrong-password') {
-        passwordErrorState();
-      }
-    }
-  }
-
   void emailErrorState() {
-    Navigator.pop(context);
+    Navigator.pop(context); // Close any existing dialogs
     showDialog(
-        context: context,
-        builder: (context) {
-          return const AlertDialog(
-            title: Text('User not found'),
-          );
-        });
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('User not found'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    // Close the dialog using the dialog's context
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   void passwordErrorState() {
@@ -105,27 +72,37 @@ class _LoginScreenNewState extends State<LoginScreenNew> {
     });
 
     try {
-      await AuthService.login(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-      await Future.delayed(const Duration(seconds: 3));
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login Successful')),
-      );
-      setState(() {
-        isLoading = false;
-      });
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const AppNavigatorServices()),
-      );
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text, password: _passwordController.text);
+      // Navigation   only happens if login is successful
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const AppNavigatorServices()),
+          (route) => false, // Remove all previous routes
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('User not found')),
+        );
+      } else if (e.code == 'wrong-password') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Incorrect password')),
+        );
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );
-    } finally {}
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   Future<void> _resetPassword() async {
@@ -133,6 +110,7 @@ class _LoginScreenNewState extends State<LoginScreenNew> {
     if (email.isNotEmpty) {
       try {
         await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Password reset email sent! Check your inbox')),
@@ -150,42 +128,27 @@ class _LoginScreenNewState extends State<LoginScreenNew> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    // Check if the user is already signed in
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user != null) {
-        // If the user is signed in, navigate to the main screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const AppNavigatorServices()),
-        );
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+    //final size = MediaQuery.of(context).size;
+    //final bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return Scaffold(
         body: Stack(
       children: [
-        Container(
-          height: size.height - 200,
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        AnimatedPositioned(
-          duration: const Duration(milliseconds: 100),
-          curve: Curves.easeOutQuad,
-          top: keyboardOpen ? -size.height / 10 : 0.0,
-          child: WaveWidget(
-            size: size,
-            yOffset: size.height / 5.0,
-            color: Theme.of(context).colorScheme.surface,
-          ),
-        ),
+        // Container(
+        //  height: size.height - 200,
+        //   color: Theme.of(context).colorScheme.primary,
+        // ),
+        // AnimatedPositioned(
+        //  duration: const Duration(milliseconds: 100),
+        //   curve: Curves.easeOutQuad,
+        //   top: keyboardOpen ? -size.height / 10 : 0.0,
+        //  child: WaveWidget(
+        //    size: size,
+        //     yOffset: size.height / 5.0,
+        //     color: Theme.of(context).colorScheme.surface,
+        //   ),
+        // ),
         Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -269,7 +232,7 @@ class _LoginScreenNewState extends State<LoginScreenNew> {
                                               color: const Color.fromARGB(
                                                   0, 255, 193, 7),
                                               child: InkWell(
-                                                onTap: signUserIn,
+                                                onTap: login,
                                                 child: const Padding(
                                                   padding: EdgeInsets.only(
                                                     top: 15,
@@ -313,6 +276,9 @@ class _LoginScreenNewState extends State<LoginScreenNew> {
                             ),
                             const SizedBox(height: 10),
                             const Text("Forgot password?"),
+                            TextButton(
+                                onPressed: _resetPassword,
+                                child: const Text('Recover your password')),
                             const SizedBox(height: 5),
                             const SizedBox(
                               height: 20,
@@ -346,7 +312,7 @@ class _LoginScreenNewState extends State<LoginScreenNew> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const RegisterScreen()),
+                                                      const RegisterScreenNew()),
                                             );
                                           },
                                           child: const Padding(

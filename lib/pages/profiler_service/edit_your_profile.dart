@@ -28,6 +28,9 @@ class _EditYourProfileState extends State<EditYourProfile> {
   TextEditingController companyEmailController = TextEditingController();
   TextEditingController companyIdController = TextEditingController();
   File? _profilePic;
+  String? _existingProfilePicUrl; // To store the existing profile pic URL
+
+  bool _isLoading = false; // To track the loading state
 
   @override
   void initState() {
@@ -48,19 +51,33 @@ class _EditYourProfileState extends State<EditYourProfile> {
         companyNameController.text = userDoc['company_name'];
         companyEmailController.text = userDoc['company_email'];
         companyIdController.text = userDoc['company_id'];
+        _existingProfilePicUrl =
+            userDoc['profile_pic']; // Store the existing URL
       });
     }
   }
 
   Future<void> _updateUserDetails() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true; // Start loading
+      });
+
       String? imageUrl;
 
       if (_profilePic != null) {
+        // Delete the existing image if a new one is uploaded
+        if (_existingProfilePicUrl != null) {
+          await _storage.refFromURL(_existingProfilePicUrl!).delete();
+        }
+
         final storageRef =
             _storage.ref().child('user_client_profile/${user!.uid}');
         final uploadTask = await storageRef.putFile(_profilePic!);
         imageUrl = await uploadTask.ref.getDownloadURL();
+      } else {
+        // If no new image is uploaded, keep the existing one
+        imageUrl = _existingProfilePicUrl;
       }
 
       await _firestore.collection('client_user').doc(user!.uid).update({
@@ -71,7 +88,11 @@ class _EditYourProfileState extends State<EditYourProfile> {
         'company_name': companyNameController.text,
         'company_email': companyEmailController.text,
         'company_id': companyIdController.text,
-        if (imageUrl != null) 'profile_pic': imageUrl,
+        'profile_pic': imageUrl, // Update with the new or existing URL
+      });
+
+      setState(() {
+        _isLoading = false; // Stop loading
       });
 
       // ignore: use_build_context_synchronously
@@ -100,97 +121,124 @@ class _EditYourProfileState extends State<EditYourProfile> {
         padding: const EdgeInsets.all(10.0),
         child: Form(
           key: _formKey,
-          child: ListView(
+          child: Stack(
+            // Use Stack to overlay the loading indicator
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 20, bottom: 20),
-                child: GestureDetector(
-                  onTap: _pickProfilePic,
-                  child: CircleAvatar(
-                    radius: 80,
-                    backgroundImage:
-                        _profilePic != null ? FileImage(_profilePic!) : null,
-                    child: _profilePic == null
-                        ? const Icon(Icons.camera_alt, size: 50)
-                        : null,
+              ListView(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 20),
+                    child: GestureDetector(
+                      onTap: _pickProfilePic,
+                      child: CircleAvatar(
+                        radius: 80,
+                        backgroundImage: _profilePic != null
+                            ? FileImage(_profilePic!)
+                            : (_existingProfilePicUrl != null
+                                ? NetworkImage(_existingProfilePicUrl!)
+                                : null),
+                        child: _profilePic == null &&
+                                _existingProfilePicUrl == null
+                            ? const Icon(Icons.camera_alt, size: 50)
+                            : null,
+                      ),
+                    ),
                   ),
+                  const SizedBox(height: 20),
+                  const Text('Personal Info'),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: firstnameController,
+                    decoration: const InputDecoration(labelText: 'First Name'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your first name';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: lastnameController,
+                    decoration: const InputDecoration(labelText: 'Last Name'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your last name';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: phoneNoController,
+                    decoration:
+                        const InputDecoration(labelText: 'Phone Number'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your phone number';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 30),
+                  const Text('Company/Campus Info'),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: companyNameController,
+                    readOnly: true,
+                    decoration:
+                        const InputDecoration(labelText: 'Company/Campus Name'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your company name';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: companyEmailController,
+                    decoration: const InputDecoration(
+                        labelText: 'Company/Campus Email'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your company email';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: hostelAddressController,
+                    decoration: const InputDecoration(
+                        labelText: 'Desk/Room/Office Address'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your hostel address';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: companyIdController,
+                    decoration:
+                        const InputDecoration(labelText: 'Company/Campus ID'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your company ID';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _isLoading
+                        ? null
+                        : _updateUserDetails, // Disable button while loading
+                    child: const Text('Save changes'),
+                  ),
+                ],
+              ),
+              if (_isLoading) // Show loading indicator if _isLoading is true
+                const Center(
+                  child: CircularProgressIndicator(),
                 ),
-              ),
-              TextFormField(
-                controller: firstnameController,
-                decoration: const InputDecoration(labelText: 'First Name'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your first name';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: lastnameController,
-                decoration: const InputDecoration(labelText: 'Last Name'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your last name';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: hostelAddressController,
-                decoration: const InputDecoration(labelText: 'Hostel Address'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your hostel address';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: phoneNoController,
-                decoration: const InputDecoration(labelText: 'Phone Number'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your phone number';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: companyNameController,
-                decoration: const InputDecoration(labelText: 'Company Name'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your company name';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: companyEmailController,
-                decoration: const InputDecoration(labelText: 'Company Email'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your company email';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: companyIdController,
-                decoration: const InputDecoration(labelText: 'Company ID'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your company ID';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _updateUserDetails,
-                child: const Text('Save changes'),
-              ),
             ],
           ),
         ),

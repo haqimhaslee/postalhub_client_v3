@@ -1,76 +1,122 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class Carousel extends StatefulWidget {
   const Carousel({super.key});
+
   @override
   State<Carousel> createState() => _CarouselState();
 }
 
 class _CarouselState extends State<Carousel> {
+  final List<CarouselItem> _items = [
+    CarouselItem(
+      backgroundImage:
+          'assets/images/werehouse_membershipcard.png', // Replace with your image paths
+      title: 'Item 1',
+      subtitle: 'Subitem 1',
+      onTap: () {
+        // Handle onTap for item 1
+        if (kDebugMode) {
+          print('Tapped Item 1');
+        }
+      },
+    ),
+    CarouselItem(
+      backgroundImage: 'assets/images/werehouse_membershipcard.png',
+      title: 'Item 2',
+      subtitle: 'Subitem 1',
+      onTap: () {
+        // Handle onTap for item 2
+        if (kDebugMode) {
+          print('Tapped Item 2');
+        }
+      },
+    ),
+    CarouselItem(
+      backgroundImage: 'assets/images/werehouse_membershipcard.png',
+      title: 'Item 3',
+      subtitle: 'Subitem 1',
+      onTap: () {
+        // Handle onTap for item 2
+        if (kDebugMode) {
+          print('Tapped Item 3');
+        }
+      },
+    ),
+    // Add more CarouselItem objects as needed
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-      child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('carouselServices')
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No images found'));
-          }
+    return Center(
+      child: ConstrainedBox(
+        constraints:
+            const BoxConstraints(maxHeight: 150), // Adjust height as needed
+        child: CarouselView(
+          itemExtent: 330,
+          shrinkExtent: 10,
+          //itemSnapping: true,
+          children: _items.map((item) {
+            return CarouselCard(item: item);
+          }).toList(),
+        ),
+      ),
+    );
+  }
+}
 
-          final items = snapshot.data!.docs;
+class CarouselItem {
+  final String backgroundImage;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
 
-          return CarouselSlider(
-            options: CarouselOptions(
-              //height: 177,
-              enlargeCenterPage: true,
-              autoPlay: true,
-              aspectRatio: 16 / 7.9,
-              //aspectRatio: 4 / 2,
-              autoPlayCurve: Curves.easeInOut,
-              enableInfiniteScroll: true,
-              autoPlayAnimationDuration: const Duration(milliseconds: 1100),
-              autoPlayInterval: const Duration(seconds: 7),
-              viewportFraction: 0.85,
+  CarouselItem({
+    required this.backgroundImage,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+}
+
+class CarouselCard extends StatelessWidget {
+  const CarouselCard({super.key, required this.item});
+
+  final CarouselItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: item.onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(item.backgroundImage),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+            child: Column(
+          children: [
+            Text(
+              item.title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            items: items.map((item) {
-              final imageUrl = item['image_url'] ?? '';
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.symmetric(horizontal: 0.0),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                    ),
-                    child: imageUrl.isNotEmpty
-                        ? CachedNetworkImage(
-                            imageUrl: imageUrl,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => const Center(
-                                child: CircularProgressIndicator()),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                          )
-                        : const Center(
-                            child: Icon(Icons.image_not_supported, size: 50)),
-                  );
-                },
-              );
-            }).toList(),
-          );
-        },
+            Text(
+              item.subtitle,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        )),
       ),
     );
   }

@@ -1,0 +1,24 @@
+Pending
+
+1. Migrating to UID number ref:-
+✅ My Parcel
+✅ Homewidget
+
+2. Bug fixes (Screen freezes during login):-
+-Loding blank
+-SharedPreferences
+-using streambuilder
+
+✅ 3. UI Fix (Profile page)
+
+✅ 4. UI Fix (More page)
+
+✅ 5. UI Fix (Search Parcel page)
+
+✅ 6. How it works/How to use page
+
+✅ 7. UI Fix (Registration page)
+
+✅ 8. UI Fix (Parcel Detail page)
+
+✅ 9. UI Fix (Ask AI page)

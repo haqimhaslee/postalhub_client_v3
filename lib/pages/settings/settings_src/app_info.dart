@@ -1,12 +1,40 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 
 class ApplicationSystemInfo extends StatefulWidget {
   const ApplicationSystemInfo({super.key});
 
   @override
   State<ApplicationSystemInfo> createState() => _ApplicationSystemInfoState();
+}
+
+Future<void> _easteregg(BuildContext context) async {
+  final theme = Theme.of(context);
+  try {
+    await launchUrl(
+      Uri.parse('https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
+      customTabsOptions: CustomTabsOptions(
+        colorSchemes: CustomTabsColorSchemes.defaults(
+          toolbarColor: theme.colorScheme.surface,
+          navigationBarColor: theme.colorScheme.surface,
+        ),
+        shareState: CustomTabsShareState.off,
+        urlBarHidingEnabled: true,
+        showTitle: true,
+      ),
+      safariVCOptions: SafariViewControllerOptions(
+        preferredBarTintColor: theme.colorScheme.surface,
+        preferredControlTintColor: theme.colorScheme.onSurface,
+        barCollapsingEnabled: true,
+        entersReaderIfAvailable: false,
+      ),
+    );
+  } catch (e) {
+    // If the URL launch fails, an exception will be thrown. (For example, if no browser app is installed on the Android device.)
+    debugPrint(e.toString());
+  }
 }
 
 class _ApplicationSystemInfoState extends State<ApplicationSystemInfo> {
@@ -16,7 +44,7 @@ class _ApplicationSystemInfoState extends State<ApplicationSystemInfo> {
         body: CustomScrollView(
       slivers: [
         const SliverAppBar.large(
-          title: Text('Developers Info'),
+          title: Text('Our Dev Info'),
         ),
         SliverToBoxAdapter(
             child: Padding(
@@ -64,7 +92,7 @@ class _ApplicationSystemInfoState extends State<ApplicationSystemInfo> {
               ),
               const SizedBox(height: 10.0),
               const Text(
-                '• The system utilizes Google Cloud services and the Gemini for efficient and scallable data management and integration.',
+                '• The system utilizes Google Cloud (GCP) services and the Gemini for efficient and scallable data management and integration.',
                 style: TextStyle(fontSize: 16.0),
               ),
               const SizedBox(height: 40.0),
@@ -79,7 +107,7 @@ class _ApplicationSystemInfoState extends State<ApplicationSystemInfo> {
               ),
               const SizedBox(height: 40.0),
               const Text(
-                'This is just the beginning of a multiyear project',
+                'The beginning of a multi-year project',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
               ),
               const SizedBox(height: 10.0),
@@ -114,7 +142,7 @@ class _ApplicationSystemInfoState extends State<ApplicationSystemInfo> {
                         child: Material(
                           color: const Color.fromARGB(0, 255, 193, 7),
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () => _easteregg(context),
                             child: const Padding(
                               padding: EdgeInsets.only(
                                 top: 15,
@@ -134,8 +162,7 @@ class _ApplicationSystemInfoState extends State<ApplicationSystemInfo> {
                                             SizedBox(
                                                 child: Padding(
                                                     padding: EdgeInsets.only(),
-                                                    child: Text(
-                                                        "Developers Option",
+                                                    child: Text("Easter Egg 🥚",
                                                         style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w600,

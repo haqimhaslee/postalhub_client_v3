@@ -86,18 +86,6 @@ class _YourProfileState extends State<YourProfile> {
                   ],
                 ),
               ),
-              const PopupMenuItem<String>(
-                value: 'ResetPassword',
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: Icon(Icons.password_rounded),
-                    ),
-                    Text('Reset password')
-                  ],
-                ),
-              ),
             ],
           ),
         ],
@@ -123,22 +111,22 @@ class _YourProfileState extends State<YourProfile> {
                                 errorBuilder: (context, error, stackTrace) {
                                   return const Column(
                                     children: [
-                                      Icon(
-                                        Icons.image_not_supported_outlined,
-                                        size: 160,
+                                      Image(
+                                        height: 130,
+                                        image: AssetImage(
+                                            'assets/images/null_profile.jpg'),
                                       ),
-                                      Text('Failed to load image'),
                                     ],
                                   );
                                 },
                               )
                             : const Column(
                                 children: [
-                                  Icon(
-                                    Icons.image,
-                                    size: 50,
+                                  Image(
+                                    height: 130,
+                                    image: AssetImage(
+                                        'assets/images/null_profile.jpg'),
                                   ),
-                                  Text('No Image'),
                                 ],
                               ),
                       ),

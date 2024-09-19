@@ -33,7 +33,7 @@ class _WaveWidgetState extends State<WaveWidget> with TickerProviderStateMixin {
         wavePoints.clear();
 
         final double waveSpeed = animationController.value * 1080;
-        final double fullSphere = animationController.value * math.pi * 2;
+        final double fullSphere = animationController.value * math.pi * 4;
         final double normalizer = math.cos(fullSphere);
         const double waveWidth = math.pi / 360;
         const double waveHeight = 20.0;

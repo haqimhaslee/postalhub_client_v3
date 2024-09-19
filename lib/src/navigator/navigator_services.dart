@@ -5,7 +5,6 @@ import 'package:postalhub_client/pages/home/home.dart';
 import 'package:postalhub_client/pages/my_parcel/my_parcel.dart';
 import 'package:postalhub_client/pages/settings/settings.dart';
 import 'package:postalhub_client/pages/search_parcel/search_parcel.dart';
-import 'package:shimmer/shimmer.dart';
 
 class AppNavigatorServices extends StatefulWidget {
   const AppNavigatorServices({super.key});
@@ -27,31 +26,11 @@ class _AppNavigatorServicesState extends State<AppNavigatorServices> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
-        //appBar: AppBar(
-        //backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
-        //elevation: 1,
-        //scrolledUnderElevation: 0,
-        //title: Row(children: [
-        //Image.asset(
-        //  'assets/images/ic_launcher.png',
-        //  width: 40,
-        //  height: 40,
-        //  fit: BoxFit.cover,
-        //),
-        //const Text('  Postal Hub'),
-        //]),
-        //),
         bottomNavigationBar: BottomAppBar(
-          //color: Theme.of(context).colorScheme.surfaceContainerLowest,
-
-          //height: 75,
           clipBehavior: Clip.antiAlias,
           shape: const CircularNotchedRectangle(),
           child: NavigationBar(
-            //backgroundColor:Theme.of(context).colorScheme.surfaceContainerLowest,
             selectedIndex: _selectedIndex,
-            //labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-            //indicatorShape: const CircleBorder(),
             onDestinationSelected: (i) => setState(() => _selectedIndex = i),
             destinations: const [
               /// Home
@@ -87,76 +66,15 @@ class _AppNavigatorServicesState extends State<AppNavigatorServices> {
             highlightElevation: 0,
             hoverElevation: 0,
             //shape: const CircleBorder(),
-            tooltip: "FAQs - Ask AI",
-            onPressed: () => showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) => Dialog.fullscreen(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(
-                                right: 0,
-                                left: 15,
-                                //top: 5,
-                                //bottom: 2,
-                              ),
-                              child: Text("'Ask AI' by  "),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 0,
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
-                              ),
-                              child: Shimmer.fromColors(
-                                period: const Duration(milliseconds: 2000),
-                                baseColor: Color.fromARGB(255, 63, 111, 232),
-                                highlightColor:
-                                    Color.fromARGB(255, 242, 106, 88),
-                                child: const Text(
-                                  'Gemini',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Flexible(
-                                fit: FlexFit.tight, child: SizedBox()),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                right: 10,
-                                left: 10,
-                                //top: 5,
-                                //bottom: 2,
-                              ),
-                              child: TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Close'),
-                              ),
-                            )
-                          ],
-                        ),
-                        const Divider(),
-                        const Expanded(child: AskAiChatUi())
-                      ],
-                    ),
-                  ),
+            tooltip: "Ask AI",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AskAi(),
                 ),
+              );
+            },
             child: const Icon(Icons.forum_rounded)),
         body: PageTransitionSwitcher(
           transitionBuilder: (child, animation, secondaryAnimation) =>

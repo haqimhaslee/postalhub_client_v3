@@ -29,7 +29,7 @@ class _FaqSState extends State<FaqS> {
                 height: 20,
               ),
               Text(
-                "frequently asked questions (FAQs) regarding how the Postal Hub functions. It should be a helpful resource for anyone who interacts with the Postal Hub, whether you're a regular customer, a business shipper, or even someone interested in the logistics behind mail processing.",
+                "Frequently Asked Questions (FAQs) regarding this project and how the Postal Hub functions. It should be a helpful resource for anyone who interacts with the Postal Hub, whether you're a regular customer, a business shipper, or even someone interested in the logistics behind mail processing.",
                 style: TextStyle(fontSize: 16.0),
               ),
               SizedBox(height: 20.0),
@@ -65,7 +65,7 @@ class _FaqSState extends State<FaqS> {
               ),
               SizedBox(height: 40.0),
               Text(
-                'More exciting features coming soon... 🙃',
+                'More features coming soon.',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
               ),
               SizedBox(height: 50.0),

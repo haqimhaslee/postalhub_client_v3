@@ -17,7 +17,8 @@ class _MyParcelState extends State<MyParcel> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final user = FirebaseAuth.instance.currentUser!;
 
-  String? companyId;
+  String? uniqueid;
+  int _selectedIndex = 0;
   @override
   void initState() {
     super.initState();
@@ -29,37 +30,60 @@ class _MyParcelState extends State<MyParcel> {
     if (user != null) {
       DocumentSnapshot userDoc =
           await _firestore.collection('client_user').doc(user.uid).get();
-      setState(() {
-        companyId = userDoc['company_id'];
-      });
+      if (mounted) {
+        setState(() {
+          uniqueid = userDoc['unique_id'];
+        });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final collectionStream = _firestore
+    // Base query for parcels
+    var baseQuery = _firestore
         .collection('parcelInventory')
-        .where('ownerId', isEqualTo: companyId)
-        .snapshots();
+        .where('ownerId', isEqualTo: uniqueid);
 
-    return StreamBuilder<QuerySnapshot>(
-      stream: collectionStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final documents = snapshot.data!.docs;
-
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('My Parcel'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('My Parcel'),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48.0),
+          child: SegmentedButton<int>(
+            segments: const <ButtonSegment<int>>[
+              ButtonSegment<int>(value: 0, label: Text('All')),
+              ButtonSegment<int>(value: 1, label: Text('Arrived')),
+              ButtonSegment<int>(value: 2, label: Text('Delivered')),
+            ],
+            selected: <int>{_selectedIndex},
+            onSelectionChanged: (Set<int> newSelection) {
+              setState(() {
+                _selectedIndex = newSelection.first;
+              });
+            },
           ),
-          body: Column(
+        ),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        // Apply filter based on the selected segment and build the stream
+        stream: (_selectedIndex == 1)
+            ? baseQuery.where('status', isEqualTo: 1).snapshots()
+            : (_selectedIndex == 2)
+                ? baseQuery.where('status', isEqualTo: 3).snapshots()
+                : baseQuery.snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final documents = snapshot.data!.docs;
+
+          return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -79,9 +103,9 @@ class _MyParcelState extends State<MyParcel> {
                 ),
               ),
             ],
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
@@ -117,6 +141,7 @@ class _MyListItemWidgetState extends State<MyListItemWidget> {
 
     final remarks = widget.data['remarks'] ?? 'No remarks';
     final status = widget.data['status'];
+    final parcelCategory = widget.data['parcelCategory'] ?? 1;
 
     //double width = MediaQuery.of(context).size.width;
 
@@ -162,72 +187,13 @@ class _MyListItemWidgetState extends State<MyListItemWidget> {
                                   children: [
                                     Text('Track No 1: $trackingID1'),
                                     Text('Remarks: $remarks'),
-                                    if (status == 'DELIVERED')
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 5, 5, 1),
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                  color: const Color.fromARGB(
-                                                      255, 13, 196, 0),
-                                                  border: Border.all(),
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                          Radius.circular(10))),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        5, 1, 5, 1),
-                                                child: Text(
-                                                  widget.data['status'],
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .onPrimary),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    else
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 5, 5, 1),
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                  color: const Color.fromARGB(
-                                                      255, 167, 196, 0),
-                                                  border: Border.all(),
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                          Radius.circular(10))),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        5, 1, 5, 1),
-                                                child: Text(
-                                                  widget.data['status'],
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .onPrimary),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                    Row(
+                                      children: [
+                                        _buildStatusWidget(context, status),
+                                        _buildCategoryWidget(
+                                            context, parcelCategory),
+                                      ],
+                                    )
                                   ],
                                 ),
                               ),
@@ -243,6 +209,84 @@ class _MyListItemWidgetState extends State<MyListItemWidget> {
           ),
         ),
       ]),
+    );
+  }
+
+  Widget _buildStatusWidget(BuildContext context, int status) {
+    switch (status) {
+      case 2:
+        return _statusContainer(context, 'On-Delivery');
+      case 3:
+        return _statusContainer(context, 'Delivered');
+      default:
+        return _statusContainer(context, 'Arrived-Sorted');
+    }
+  }
+
+  Widget _statusContainer(BuildContext context, String statusText) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 5, 5, 1),
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 174, 174, 0),
+              border: Border.all(),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(5, 1, 5, 1),
+              child: Text(
+                statusText,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryWidget(BuildContext context, int parcelCategory) {
+    switch (parcelCategory) {
+      case 2:
+        return _categoryContainer(context, 'SELF-COLLECT');
+      case 3:
+        return _categoryContainer(context, 'COD');
+      default:
+        return Container();
+    }
+  }
+
+  Widget _categoryContainer(BuildContext context, String categoryText) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 5, 5, 1),
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(0, 167, 196, 0),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(5, 1, 5, 1),
+              child: Text(
+                categoryText,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
     );
   }
 }

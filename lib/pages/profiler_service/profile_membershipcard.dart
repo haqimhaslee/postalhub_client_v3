@@ -17,7 +17,8 @@ class _MembershipCardState extends State<MembershipCard> {
 
   String? firstname;
   String? lastname;
-  String? companyId;
+  String? uniqueId;
+
   int? membershipPoints;
 
   @override
@@ -34,7 +35,7 @@ class _MembershipCardState extends State<MembershipCard> {
       setState(() {
         firstname = userDoc['firstName'];
         lastname = userDoc['lastName'];
-        companyId = userDoc['company_id'];
+        uniqueId = userDoc['unique_id'];
         membershipPoints = userDoc['membership_points'];
       });
     }
@@ -102,7 +103,7 @@ class _MembershipCardState extends State<MembershipCard> {
                                   ),
                                 ),
                                 Text(
-                                  "Postal Hub Membership",
+                                  "Postal Hub | Point Reward System",
                                   style:
                                       Theme.of(context).textTheme.titleMedium,
                                 ),
@@ -161,18 +162,24 @@ class _MembershipCardState extends State<MembershipCard> {
                                     bottom: 5,
                                   ),
                                   child: QrImageView(
-                                    data: '$companyId',
+                                    data: '$uniqueId',
                                     version: QrVersions.auto,
                                     size: 150,
                                     gapless: true,
                                   ),
-                                )
+                                ),
                               ]),
                             ),
                           ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Center(
+                            child: Text('$uniqueId'),
+                          ),
                           Padding(
                               padding: const EdgeInsets.only(
-                                top: 30,
+                                top: 8,
                                 left: 0,
                                 right: 0,
                                 bottom: 0,
@@ -223,7 +230,7 @@ class _MembershipCardState extends State<MembershipCard> {
                 iconSize: 10,
                 onPressed: () {
                   const snackBar = SnackBar(
-                    content: Text('Coming soon!'),
+                    content: Text('Oops! Not available...'),
                   );
 
                   // Find the ScaffoldMessenger in the widget tree

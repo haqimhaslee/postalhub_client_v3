@@ -24,7 +24,7 @@ class _SearchParcelState extends State<SearchParcel> {
         title: const Text('Search Parcel'),
       ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(5, 5, 5, 10),
+        padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
         child: Column(
           children: [
             Padding(
@@ -51,74 +51,16 @@ class _SearchParcelState extends State<SearchParcel> {
             Expanded(
               child: _buildSearchResults(_searchTerm),
             ),
-            Card(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              elevation: 0,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-              ),
-              child: SizedBox(
-                  width: 200,
-                  child: Column(
-                    children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          topRight: Radius.circular(15),
-                          bottomLeft: Radius.circular(15),
-                          bottomRight: Radius.circular(15),
-                        ),
-                        child: Material(
-                          color: const Color.fromARGB(0, 255, 193, 7),
-                          child: InkWell(
-                            onTap: () =>
-                                setState(() => _searchTerm = searchInput.text),
-                            child: const Padding(
-                              padding: EdgeInsets.only(
-                                top: 15,
-                                bottom: 15,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  SizedBox(
-                                    //width: MediaQuery.of(context).size.width - 180,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                                child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 0),
-                                                    child: Text("Search",
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ))))
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
-            ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        elevation: 0,
+        onPressed: () => setState(() => _searchTerm = searchInput.text),
+        label: const Text('Search'),
+        icon: const Icon(Icons.search),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -175,6 +117,7 @@ class _SearchParcelState extends State<SearchParcel> {
             final trackingId2 = data['trackingId2']?.toString() ?? '';
             final trackingId3 = data['trackingId3']?.toString() ?? '';
             final trackingId4 = data['trackingId4']?.toString() ?? '';
+            final warehouse = data['warehouse'] ?? 'No warehouse data';
             final receiverRemarks = data['receiverRemarks']?.toString() ?? '';
             final remarks = data['remarks']?.toString() ?? '';
             final status = data['status'];
@@ -200,7 +143,23 @@ class _SearchParcelState extends State<SearchParcel> {
                     decoration: const BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.all(Radius.circular(30))),
-                    child: const Icon(Icons.check_rounded, color: Colors.white),
+                    child: const Icon(Icons.inventory, color: Colors.white),
+                  )),
+              StepperData(
+                  title: StepperText(
+                    "On delivery",
+                    textStyle: const TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  subtitle: StepperText("On delivery"),
+                  iconWidget: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child:
+                        const Icon(Icons.delivery_dining, color: Colors.white),
                   )),
               StepperData(
                   title: StepperText("Delivered",
@@ -214,7 +173,7 @@ class _SearchParcelState extends State<SearchParcel> {
                         color: Colors.green,
                         borderRadius: BorderRadius.all(Radius.circular(30))),
                     child: const Icon(Icons.check_rounded, color: Colors.white),
-                  )),
+                  ))
             ];
 
             List<StepperData> stepperDataSorted = [
@@ -231,23 +190,84 @@ class _SearchParcelState extends State<SearchParcel> {
                     decoration: const BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.all(Radius.circular(30))),
-                    child: const Icon(Icons.check_rounded, color: Colors.white),
+                    child: const Icon(Icons.inventory, color: Colors.white),
                   )),
               StepperData(
                   title: StepperText(
-                    "Not delivered",
+                    "On delivery",
                     textStyle: const TextStyle(
                       color: Colors.grey,
                     ),
                   ),
+                  subtitle: StepperText("On delivery"),
+                  iconWidget: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child:
+                        const Icon(Icons.delivery_dining, color: Colors.white),
+                  )),
+              StepperData(
+                  title: StepperText("Delivered",
+                      textStyle: const TextStyle(
+                        color: Colors.grey,
+                      )),
                   subtitle: StepperText("Delivery"),
                   iconWidget: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: const BoxDecoration(
                         color: Colors.grey,
                         borderRadius: BorderRadius.all(Radius.circular(30))),
-                    child: const Icon(Icons.close_rounded, color: Colors.white),
+                    child: const Icon(Icons.check_rounded, color: Colors.white),
+                  ))
+            ];
+
+            List<StepperData> stepperDataOnDelivery = [
+              StepperData(
+                  title: StepperText(
+                    "Ready to take",
+                    textStyle: const TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  subtitle: StepperText("Arriving/Sorting"),
+                  iconWidget: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child: const Icon(Icons.inventory, color: Colors.white),
                   )),
+              StepperData(
+                  title: StepperText(
+                    "On delivery",
+                    textStyle: const TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  subtitle: StepperText("On delivery"),
+                  iconWidget: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child:
+                        const Icon(Icons.delivery_dining, color: Colors.white),
+                  )),
+              StepperData(
+                  title: StepperText("Not delivered",
+                      textStyle: const TextStyle(
+                        color: Colors.grey,
+                      )),
+                  subtitle: StepperText("Delivery"),
+                  iconWidget: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child: const Icon(Icons.check_rounded, color: Colors.white),
+                  ))
             ];
 
             return Column(
@@ -259,32 +279,45 @@ class _SearchParcelState extends State<SearchParcel> {
                 ),
                 Column(
                   children: [
-                    if (status == 'DELIVERED')
-                      AnotherStepper(
-                        stepperList: stepperDataDelivered,
-                        stepperDirection: Axis.horizontal,
-                        iconWidth: 40,
-                        iconHeight: 40,
-                        activeBarColor: Colors.green,
-                        inActiveBarColor: Colors.grey,
-                        inverted: true,
-                        verticalGap: 30,
-                        activeIndex: 1,
-                        barThickness: 8,
-                      ),
-                    if (status == 'ARRIVED-SORTED')
-                      AnotherStepper(
-                        stepperList: stepperDataSorted,
-                        stepperDirection: Axis.horizontal,
-                        iconWidth: 40,
-                        iconHeight: 40,
-                        activeBarColor: Colors.green,
-                        inActiveBarColor: Colors.grey,
-                        inverted: true,
-                        verticalGap: 30,
-                        activeIndex: 0,
-                        barThickness: 8,
-                      ),
+                    switch (status) {
+                      1 => AnotherStepper(
+                          stepperList: stepperDataSorted,
+                          stepperDirection: Axis.horizontal,
+                          iconWidth: 40,
+                          iconHeight: 40,
+                          activeBarColor: Colors.green,
+                          inActiveBarColor: Colors.grey,
+                          inverted: true,
+                          verticalGap: 20,
+                          activeIndex: 0,
+                          barThickness: 8,
+                        ),
+                      2 => AnotherStepper(
+                          stepperList: stepperDataOnDelivery,
+                          stepperDirection: Axis.horizontal,
+                          iconWidth: 40,
+                          iconHeight: 40,
+                          activeBarColor: Colors.green,
+                          inActiveBarColor: Colors.grey,
+                          inverted: true,
+                          verticalGap: 20,
+                          activeIndex: 1,
+                          barThickness: 8,
+                        ),
+                      3 => AnotherStepper(
+                          stepperList: stepperDataDelivered,
+                          stepperDirection: Axis.horizontal,
+                          iconWidth: 40,
+                          iconHeight: 40,
+                          activeBarColor: Colors.green,
+                          inActiveBarColor: Colors.grey,
+                          inverted: true,
+                          verticalGap: 20,
+                          activeIndex: 2,
+                          barThickness: 8,
+                        ),
+                      _ => Container(), // Handle default case if needed
+                    },
                   ],
                 ),
                 const SizedBox(
@@ -309,7 +342,7 @@ class _SearchParcelState extends State<SearchParcel> {
                                 child: Image.network(
                                   imageUrl,
                                   width: 300.0,
-                                  height: 300.0,
+                                  //height: 300.0,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
                                     String errorMessage;
@@ -355,10 +388,15 @@ class _SearchParcelState extends State<SearchParcel> {
                               Text(
                                 'Tracking ID 4 : $trackingId4',
                               ),
+                            if (timestampSorted != null)
+                              Text(
+                                'Arrived & sorted at: ${DateFormat.yMMMd().add_jm().format(timestampSorted)}',
+                              ),
                             if (remarks.isNotEmpty)
                               Text(
                                 'Remarks/Notes : $remarks',
                               ),
+                            Text('Wherehouse : $warehouse')
                           ],
                         ),
                       ),
@@ -368,11 +406,8 @@ class _SearchParcelState extends State<SearchParcel> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 1, 20, 1),
-                  child: Divider(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(20, 1, 20, 1),
                 ),
                 Card(
                   elevation: 0,
@@ -389,47 +424,12 @@ class _SearchParcelState extends State<SearchParcel> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (status == 'DELIVERED')
+                            if (status == 3)
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(5, 5, 5, 1),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      children: [
-                                        const Text('Status : '),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                  255, 13, 196, 0),
-                                              border: Border.all(),
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(10))),
-                                          child: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      5, 1, 5, 1),
-                                              child: Text(
-                                                data['status'],
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .onPrimary),
-                                              )),
-                                        ),
-                                      ],
-                                    ),
-                                    if (timestampSorted != null)
-                                      Text(
-                                        'Arrived & sorted at: ${DateFormat.yMMMd().add_jm().format(timestampSorted)}',
-                                      ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
                                     if (timestampDelivered != null)
                                       Text(
                                         'Delivered at: ${DateFormat.yMMMd().add_jm().format(timestampDelivered)}',
@@ -453,7 +453,7 @@ class _SearchParcelState extends State<SearchParcel> {
                                           child: Image.network(
                                             receiverImageUrl,
                                             width: 300.0,
-                                            height: 300.0,
+                                            //height: 300.0,
                                             fit: BoxFit.cover,
                                             errorBuilder:
                                                 (context, error, stackTrace) {
@@ -490,31 +490,6 @@ class _SearchParcelState extends State<SearchParcel> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      children: [
-                                        const Text('Status : '),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                  255, 167, 196, 0),
-                                              border: Border.all(),
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(10))),
-                                          child: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      5, 1, 5, 1),
-                                              child: Text(
-                                                data['status'],
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .onPrimary),
-                                              )),
-                                        ),
-                                      ],
-                                    ),
                                     if (timestampSorted != null)
                                       Text(
                                         'Arrived & sorted at: ${DateFormat.yMMMd().add_jm().format(timestampSorted)}',
@@ -526,7 +501,7 @@ class _SearchParcelState extends State<SearchParcel> {
                         ),
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 8,
                       )
                     ],
                   ),
