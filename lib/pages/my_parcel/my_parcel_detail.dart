@@ -363,123 +363,125 @@ class MyParcelDetail extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.fromLTRB(15, 1, 15, 1),
                   ),
-                  Card(
-                    elevation: 0,
-                    color: Theme.of(context).colorScheme.surfaceVariant,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(25, 0, 25, 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (status == 3)
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(5, 5, 5, 1),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      if (timestampDelivered != null)
-                                        Text(
-                                          'Delivered at: ${DateFormat.yMMMd().add_jm().format(timestampDelivered)}',
-                                        ),
-                                      Text(
-                                        'Receiver: $receiverId',
-                                      ),
-                                      if (receiverRemark.isNotEmpty)
-                                        Text('Remarks : $receiverRemark'),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Stack(
-                                            alignment: Alignment.center,
-                                            children: [
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                child: Image.network(
-                                                  receiverImageUrl,
-                                                  width: 300.0,
-                                                  //height: 300.0,
-                                                  fit: BoxFit.cover,
-                                                  loadingBuilder:
-                                                      (BuildContext context,
-                                                          Widget child,
-                                                          ImageChunkEvent?
-                                                              loadingProgress) {
-                                                    if (loadingProgress ==
-                                                        null) {
-                                                      return child;
-                                                    } else {
-                                                      return const Center(
-                                                        child:
-                                                            CircularProgressIndicator(),
-                                                      );
-                                                    }
-                                                  },
-                                                  errorBuilder: (context, error,
-                                                      stackTrace) {
-                                                    String errorMessage;
-                                                    if (error
-                                                        is NetworkImageLoadException) {
-                                                      errorMessage =
-                                                          'Network error: $error';
-                                                    } else {
-                                                      errorMessage =
-                                                          'Failed to load image: $error';
-                                                    }
-                                                    return Column(
-                                                      children: [
-                                                        const Icon(Icons
-                                                            .image_not_supported_outlined),
-                                                        Text(errorMessage),
-                                                      ],
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              else
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(5, 5, 5, 1),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      if (timestampArrived != null)
-                                        Text(
-                                          'Arrived & sorted at: ${DateFormat.yMMMd().add_jm().format(timestampArrived)}',
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                            ],
+                 
+                    Card(
+                      elevation: 0,
+                      color: Theme.of(context).colorScheme.surfaceVariant,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 10,
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(25, 0, 25, 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (status == 3)
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(5, 5, 5, 1),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        if (timestampDelivered != null)
+                                          Text(
+                                            'Delivered at: ${DateFormat.yMMMd().add_jm().format(timestampDelivered)}',
+                                          ),
+                                        Text(
+                                          'Receiver: $receiverId',
+                                        ),
+                                        if (receiverRemark.isNotEmpty)
+                                          Text('Remarks : $receiverRemark'),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                  child: Image.network(
+                                                    receiverImageUrl,
+                                                    width: 300.0,
+                                                    //height: 300.0,
+                                                    fit: BoxFit.cover,
+                                                    loadingBuilder: (BuildContext
+                                                            context,
+                                                        Widget child,
+                                                        ImageChunkEvent?
+                                                            loadingProgress) {
+                                                      if (loadingProgress ==
+                                                          null) {
+                                                        return child;
+                                                      } else {
+                                                        return const Center(
+                                                          child:
+                                                              CircularProgressIndicator(),
+                                                        );
+                                                      }
+                                                    },
+                                                    errorBuilder: (context,
+                                                        error, stackTrace) {
+                                                      String errorMessage;
+                                                      if (error
+                                                          is NetworkImageLoadException) {
+                                                        errorMessage =
+                                                            'Network error: $error';
+                                                      } else {
+                                                        errorMessage =
+                                                            'Failed to load image: $error';
+                                                      }
+                                                      return Column(
+                                                        children: [
+                                                          const Icon(Icons
+                                                              .image_not_supported_outlined),
+                                                          Text(errorMessage),
+                                                        ],
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                else
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(5, 5, 5, 1),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        if (timestampArrived != null)
+                                          Text(
+                                            'Arrived & sorted at: ${DateFormat.yMMMd().add_jm().format(timestampArrived)}',
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
                   const SizedBox(
                     height: 75,
                   ),

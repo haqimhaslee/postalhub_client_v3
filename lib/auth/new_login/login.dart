@@ -1,8 +1,11 @@
 // ignore_for_file: use_build_context_synchronously, duplicate_ignore, deprecated_member_use
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:postalhub_client/auth/new_register/register.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:postalhub_client/src/navigator/navigator_services.dart';
 
 class LoginScreenNew extends StatefulWidget {
@@ -72,9 +75,54 @@ class _LoginScreenNewState extends State<LoginScreenNew> {
     });
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text, password: _passwordController.text);
+      // 1. Request notification permission before login
+      NotificationSettings settings =
+          await FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
+
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        if (kDebugMode) {
+          print('User granted permission');
+        }
+      } else if (settings.authorizationStatus ==
+          AuthorizationStatus.provisional) {
+        if (kDebugMode) {
+          print('User granted provisional permission');
+        }
+      } else {
+        if (kDebugMode) {
+          print('User declined or has not accepted permission');
+        }
+
+        // You might want to handle this case, maybe show a message to the user
+      }
+
+      // 2. Proceed with login
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+      if (fcmToken != null) {
+        await FirebaseFirestore.instance
+            .collection('client_user') // Assuming you have a 'users' collection
+            .doc(userCredential
+                .user!.uid) // Use the user's UID as the document ID
+            .set({
+          'fcmToken': fcmToken
+        }, SetOptions(merge: true)); // Merge to avoid overwriting other data
+      }
       // Navigation   only happens if login is successful
+
       if (mounted) {
         Navigator.pushAndRemoveUntil(
           context,
